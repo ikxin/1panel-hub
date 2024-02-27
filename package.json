@@ -15,6 +15,7 @@
     "vue": "^3.4.20"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
     "@tauri-apps/cli": "2.0.0-beta.4",
     "@vitejs/plugin-vue": "^5.0.4",
     "internal-ip": "^8.0.0",
