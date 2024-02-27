@@ -1,3 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const msg = ref('Primary')
+</script>
 
-<template></template>
+<template>
+  <AButton type="primary">{{ msg }}</AButton>
+</template>

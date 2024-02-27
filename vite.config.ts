@@ -2,6 +2,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { internalIpV4 } from 'internal-ip'
 import { resolve } from 'path'
+import Components from 'unplugin-vue-components/vite'
+import { ArcoResolver } from 'unplugin-vue-components/resolvers'
+import AutoImport from 'unplugin-auto-import/vite'
+import UnoCSS from 'unocss/vite'
 
 // process is a nodejs global
 const mobile = !!/android|ios/.exec(process.env.TAURI_ENV_PLATFORM)
@@ -13,7 +17,24 @@ export default defineConfig(async () => ({
       '@': resolve(__dirname, './src'),
     },
   },
-  plugins: [vue()],
+
+  plugins: [
+    vue(),
+    UnoCSS(),
+    AutoImport({
+      dts: './src/typings/imports.d.ts',
+      imports: ['vue'],
+      resolvers: [ArcoResolver()],
+    }),
+    Components({
+      dts: './src/typings/components.d.ts',
+      resolvers: [
+        ArcoResolver({
+          sideEffect: true,
+        }),
+      ],
+    }),
+  ],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //
