@@ -6,6 +6,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ArcoResolver } from 'unplugin-vue-components/resolvers'
 import AutoImport from 'unplugin-auto-import/vite'
 import UnoCSS from 'unocss/vite'
+import VueRouter from 'unplugin-vue-router/vite'
 
 // process is a nodejs global
 const mobile = !!/android|ios/.exec(process.env.TAURI_ENV_PLATFORM)
@@ -19,11 +20,16 @@ export default defineConfig(async () => ({
   },
 
   plugins: [
+    VueRouter({
+      dts: './src/typings/vue-router.d.ts',
+      extensions: ['.vue'],
+      routesFolder: './src/views',
+    }),
     vue(),
     UnoCSS(),
     AutoImport({
       dts: './src/typings/imports.d.ts',
-      imports: ['vue'],
+      imports: ['vue', '@vueuse/core', 'vue-i18n', 'vue-router'],
       resolvers: [ArcoResolver()],
     }),
     Components({

@@ -1,7 +1,5 @@
-<script setup lang="ts">
-const msg = ref('Primary')
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <AButton type="primary">{{ msg }}</AButton>
+  <RouterView />
 </template>
