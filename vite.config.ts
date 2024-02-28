@@ -36,7 +36,7 @@ export default defineConfig(async () => ({
       dts: './src/typings/components.d.ts',
       resolvers: [
         ArcoResolver({
-          sideEffect: true,
+          sideEffect: false,
         }),
       ],
     }),

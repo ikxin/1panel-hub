@@ -31,6 +31,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.11.20
     version: 20.11.20
+  '@unocss/reset':
+    specifier: ^0.58.5
+    version: 0.58.5
   '@vitejs/plugin-vue':
     specifier: ^5.0.4
     version: 5.0.4(vite@5.1.4)(vue@3.4.20)

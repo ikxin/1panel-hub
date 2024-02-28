@@ -1,5 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-  <RouterView />
+  <AConfigProvider>
+    <AScrollbar class="h-screen overflow-auto">
+      <RouterView />
+    </AScrollbar>
+  </AConfigProvider>
 </template>
