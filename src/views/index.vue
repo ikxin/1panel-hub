@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const msg = ref('Primary')
+const { t } = useI18n()
 </script>
 
 <template>
-  <AButton type="primary">{{ msg }}</AButton>
+  <AButton type="primary">{{ t('button') }}</AButton>
 </template>
