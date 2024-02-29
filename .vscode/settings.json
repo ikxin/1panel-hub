@@ -1,6 +1,7 @@
 {
   "editor.formatOnSave": true,
   "i18n-ally.localesPaths": ["src/locales/modules"],
+  "i18n-ally.keystyle": "nested",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"

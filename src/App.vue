@@ -1,9 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import enUS from '@arco-design/web-vue/es/locale/lang/en-us'
+</script>
 
 <template>
-  <AConfigProvider>
-    <AScrollbar class="h-screen overflow-auto">
-      <RouterView />
-    </AScrollbar>
+  <AConfigProvider :locale="enUS">
+    <RouterView />
   </AConfigProvider>
 </template>
