@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import axios from 'axios'
+import { loginApi } from '@/api/modules/auth'
 import { IconPlus } from '@arco-design/web-vue/es/icon'
 
 const { t } = useI18n()
@@ -19,17 +19,14 @@ const serverDataForm = ref({
 })
 
 const handleBeforeOk = async () => {
-  const { data } = await axios('/api/v1/auth/login', {
-    method: 'POST',
-    data: {
-      authMethod: 'jwt',
-      captcha: '',
-      captchaID: '',
-      ignoreCaptcha: true,
-      language: 'zh',
-      name: serverDataForm.value.username,
-      password: serverDataForm.value.password,
-    },
+  const { data } = await loginApi({
+    authMethod: 'jwt',
+    captcha: '',
+    captchaID: '',
+    ignoreCaptcha: true,
+    language: 'en',
+    name: serverDataForm.value.username,
+    password: serverDataForm.value.password,
   })
   if (data.code === 200) {
     serverData.value.push({

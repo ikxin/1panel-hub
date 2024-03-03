@@ -62,5 +62,11 @@ export default defineConfig(async () => ({
       // 3. tell vite to ignore watching `src-tauri`
       ignored: ['**/src-tauri/**'],
     },
+    proxy: {
+      '/api/v1': {
+        target: 'http://192.168.1.100:8888',
+        changeOrigin: true,
+      },
+    },
   },
 }))
