@@ -1,16 +1,17 @@
 {
-  "common": {
-    "alert": {
-      "notAddedServerTitle": "Prompt",
-      "notAddedServer": "You have not added a server yet, please click the Add Server button in the top menu bar to create a new server."
-    },
-    "label": {
-      "id": "ID",
-      "name": "Name",
-      "ip": "IP Address",
-      "port": "Port",
-      "username": "UserName",
-      "password": "Password"
-    }
+  "alert": {
+    "notAddedServer": "You have not added a server yet, please click the Add Server button in the top menu bar to create a new server."
+  },
+  "label": {
+    "id": "ID",
+    "name": "Name",
+    "ip": "IP Address",
+    "port": "Port",
+    "username": "UserName",
+    "password": "Password"
+  },
+  "title": {
+    "prompt": "Prompt",
+    "serverInfo": "Server Info"
   }
 }

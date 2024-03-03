@@ -1,8 +1,17 @@
 {
-  "common": {
-    "alert": {
-      "notAddedServerTitle": "提示",
-      "notAddedServer": "您还没有添加服务器，请在顶部菜单栏点击添加服务器按钮，以创建一个新的服务器。"
-    }
+  "alert": {
+    "notAddedServer": "您还没有添加服务器，请在顶部菜单栏点击添加服务器按钮，以创建一个新的服务器。"
+  },
+  "label": {
+    "id": "编号",
+    "name": "名称",
+    "ip": "IP 地址",
+    "port": "端口",
+    "username": "用户名",
+    "password": "密码"
+  },
+  "title": {
+    "prompt": "提示",
+    "serverInfo": "服务器信息"
   }
 }
