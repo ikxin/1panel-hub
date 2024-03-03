@@ -2,13 +2,17 @@
   "alert": {
     "notAddedServer": "You have not added a server yet, please click the Add Server button in the top menu bar to create a new server."
   },
+  "button": {
+    "enterPanel": "Enter Panel"
+  },
   "label": {
     "id": "ID",
     "name": "Name",
     "ip": "IP Address",
     "port": "Port",
     "username": "UserName",
-    "password": "Password"
+    "password": "Password",
+    "token": "Token"
   },
   "title": {
     "prompt": "Prompt",
