@@ -22,6 +22,9 @@ devDependencies:
   '@biomejs/biome':
     specifier: ^1.5.3
     version: 1.5.3
+  '@iconify-json/flag':
+    specifier: ^1.1.48
+    version: 1.1.48
   '@intlify/unplugin-vue-i18n':
     specifier: ^2.0.0
     version: 2.0.0(vue-i18n@9.10.1)
@@ -730,6 +733,12 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@iconify-json/flag@1.1.48:
+    resolution: {integrity: sha512-M83pP/Xc/UjxAwCUGn/d0uNulxW8Dm14eH1r49Mg3lmdpMgRSidRzpCEIRk9VMmxICAWbFMoFYcCJZqPeCS9HQ==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
 
   /@iconify/types@2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}

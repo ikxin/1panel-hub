@@ -1,12 +1,35 @@
 <script setup lang="ts">
 import { loginApi } from '@/api/modules/auth'
-import { IconPlus } from '@arco-design/web-vue/es/icon'
+import { IconPlus, IconLanguage } from '@arco-design/web-vue/es/icon'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
-const serverData = useStorage<any>('server-data', [])
+const serverData = useStorage<any>('serverData', [])
 
-const currentToken = useStorage<string>('current-token', '')
+const currentToken = useStorage<string>('currentToken', '')
+
+const language = useStorage<string>('language', 'zh')
+
+locale.value = language.value
+
+const languages = computed(() => {
+  return [
+    {
+      lable: t('label.zh'),
+      value: 'zh',
+      icon: 'i-flag:cn-4x3',
+    },
+    {
+      lable: t('label.en'),
+      value: 'en',
+      icon: 'i-flag:us-4x3',
+    },
+  ]
+})
+
+const toggleLocales = (lang: string) => {
+  language.value = locale.value = lang
+}
 
 const serverDataModal = reactive({
   visible: false,
@@ -47,17 +70,32 @@ const enterPanel = (token: string) => {
 </script>
 
 <template>
-  <ALayoutHeader class="h-16 sticky top-0 bg-white border-b border-gray-200 shadow-md">
+  <ALayoutHeader class="h-16 sticky top-0 bg-white border-b border-gray-200 shadow-md max-w-full">
     <div class="mx-auto flex h-full max-w-6xl items-center justify-between px-4">
       <div class="flex-1">
         <div class="h-8 w-32 rounded bg-slate-200 flex justify-center items-center">logo</div>
       </div>
-      <div class="flex flex-1 items-center justify-end">
+      <div class="flex flex-1 items-center justify-end gap-2">
         <AButton size="small" @click="serverDataModal.visible = true">
           <template #icon>
             <IconPlus />
           </template>
         </AButton>
+        <ADropdown>
+          <AButton size="small" type="secondary">
+            <template #icon>
+              <IconLanguage />
+            </template>
+          </AButton>
+          <template #content>
+            <ADoption v-for="item in languages" :key="item.value" @click="toggleLocales(item.value)">
+              <template #icon>
+                <i :class="item.icon" />
+              </template>
+              <template #default>{{ item.lable }}</template>
+            </ADoption>
+          </template>
+        </ADropdown>
       </div>
       <AModal v-model:visible="serverDataModal.visible" :title="t('title.serverInfo')" :on-before-ok="handleBeforeOk">
         <AForm :model="serverDataForm">

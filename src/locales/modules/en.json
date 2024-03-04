@@ -12,7 +12,8 @@
     "port": "Port",
     "username": "UserName",
     "password": "Password",
-    "token": "Token"
+    "en": "English",
+    "zh": "Simplified Chinese"
   },
   "title": {
     "prompt": "Prompt",
