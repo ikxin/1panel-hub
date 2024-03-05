@@ -7,8 +7,9 @@ import { ArcoResolver } from 'unplugin-vue-components/resolvers'
 import AutoImport from 'unplugin-auto-import/vite'
 import UnoCSS from 'unocss/vite'
 import VueRouter from 'unplugin-vue-router/vite'
+import VueDevTools from 'vite-plugin-vue-devtools'
 
-// process is a nodejs global
+// @ts-ignore process is a nodejs global
 const mobile = !!/android|ios/.exec(process.env.TAURI_ENV_PLATFORM)
 
 // https://vitejs.dev/config/
@@ -29,7 +30,7 @@ export default defineConfig(async () => ({
     UnoCSS(),
     AutoImport({
       dts: './src/typings/imports.d.ts',
-      imports: ['vue', '@vueuse/core', 'vue-i18n', 'vue-router'],
+      imports: ['vue', '@vueuse/core', 'vue-i18n', 'vue-router', 'pinia'],
       resolvers: [ArcoResolver()],
     }),
     Components({
@@ -40,6 +41,7 @@ export default defineConfig(async () => ({
         }),
       ],
     }),
+    VueDevTools(),
   ],
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
