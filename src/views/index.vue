@@ -1,37 +1,18 @@
 <script setup lang="ts">
 import { loginApi } from '@/api/modules/auth'
 import { IconPlus, IconLanguage } from '@arco-design/web-vue/es/icon'
+import { useGlobalStore } from '@/store'
+import { languages } from '@/locales'
+
+const { toggleLanguage } = useGlobalStore()
+
+const { t } = useI18n()
 
 const router = useRouter()
-
-const { t, locale } = useI18n()
 
 const serverData = useStorage<any[]>('serverData', [])
 
 const currentToken = useStorage<string>('currentToken', '')
-
-const language = useStorage<string>('language', 'zh')
-
-locale.value = language.value
-
-const languages = computed(() => {
-  return [
-    {
-      lable: t('label.zh'),
-      value: 'zh',
-      icon: 'i-flag:cn-4x3',
-    },
-    {
-      lable: t('label.en'),
-      value: 'en',
-      icon: 'i-flag:us-4x3',
-    },
-  ]
-})
-
-const toggleLocales = (lang: string) => {
-  language.value = locale.value = lang
-}
 
 const serverDataModal = reactive({
   visible: false,
@@ -91,11 +72,11 @@ const enterPanel = (token: string) => {
             </template>
           </AButton>
           <template #content>
-            <ADoption v-for="item in languages" :key="item.value" @click="toggleLocales(item.value)">
+            <ADoption v-for="item in languages" :key="item.value" @click="toggleLanguage(item.value)">
               <template #icon>
                 <i :class="item.icon" />
               </template>
-              <template #default>{{ item.lable }}</template>
+              <template #default>{{ t(item.lable) }}</template>
             </ADoption>
           </template>
         </ADropdown>
