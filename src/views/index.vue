@@ -2,6 +2,8 @@
 import { loginApi } from '@/api/modules/auth'
 import { IconPlus, IconLanguage } from '@arco-design/web-vue/es/icon'
 
+const router = useRouter()
+
 const { t, locale } = useI18n()
 
 const serverData = useStorage<any[]>('serverData', [])
@@ -66,6 +68,7 @@ const handleBeforeOk = async () => {
 
 const enterPanel = (token: string) => {
   currentToken.value = token
+  router.push('/dashboard')
 }
 </script>
 
