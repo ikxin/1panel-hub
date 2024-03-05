@@ -4,7 +4,7 @@ import { IconPlus, IconLanguage } from '@arco-design/web-vue/es/icon'
 
 const { t, locale } = useI18n()
 
-const serverData = useStorage<any>('serverData', [])
+const serverData = useStorage<any[]>('serverData', [])
 
 const currentToken = useStorage<string>('currentToken', '')
 
@@ -119,11 +119,11 @@ const enterPanel = (token: string) => {
     </div>
   </ALayoutHeader>
   <AScrollbar class="max-h-[calc(100vh-4rem)] overflow-auto">
-    <div class="mx-auto grid grid-cols-4 gap-4 min-h-full max-w-6xl my-4 px-4">
-      <AAlert :title="t('title.prompt')" class="col-span-4">
+    <div class="mx-auto grid grid-cols-1 lg:grid-cols-4 sm:grid-cols-2 gap-4 min-h-full max-w-6xl my-4 px-4">
+      <AAlert v-if="serverData.length === 0" :title="t('title.prompt')" class="col-span-4">
         {{ t('alert.notAddedServer') }}
       </AAlert>
-      <ACard :title="item.name" v-for="item in serverData" :key="item.ip" size="medium">
+      <ACard v-else :title="item.name" v-for="item in serverData" :key="item.ip" size="medium">
         <ADescriptions :column="1" :align="{ label: 'right' }">
           <ADescriptionsItem :label="t('label.ip')">{{ item.ip }}</ADescriptionsItem>
           <ADescriptionsItem :label="t('label.port')">{{ item.port }}</ADescriptionsItem>
