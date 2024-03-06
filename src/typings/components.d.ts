@@ -27,6 +27,8 @@ declare module 'vue' {
     AMenuItem: typeof import('@arco-design/web-vue')['MenuItem']
     AModal: typeof import('@arco-design/web-vue')['Modal']
     AScrollbar: typeof import('@arco-design/web-vue')['Scrollbar']
+    LayoutNavBar: typeof import('./../components/layout/nav-bar.vue')['default']
+    LayoutSideBar: typeof import('./../components/layout/side-bar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
