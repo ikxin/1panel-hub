@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import { loginApi } from '@/api/modules/auth'
-import { IconPlus, IconLanguage } from '@arco-design/web-vue/es/icon'
-import { useGlobalStore } from '@/store'
-import { languages } from '@/locales'
-
-const { toggleLanguage } = useGlobalStore()
+import { IconPlus } from '@arco-design/web-vue/es/icon'
 
 const { t } = useI18n()
 
@@ -56,21 +52,7 @@ const handleBeforeOk = async () => {
             <IconPlus />
           </template>
         </AButton>
-        <ADropdown>
-          <AButton size="small" type="secondary">
-            <template #icon>
-              <IconLanguage />
-            </template>
-          </AButton>
-          <template #content>
-            <ADoption v-for="item in languages" :key="item.value" @click="toggleLanguage(item.value)">
-              <template #icon>
-                <i :class="item.icon" />
-              </template>
-              <template #default>{{ t(item.lable) }}</template>
-            </ADoption>
-          </template>
-        </ADropdown>
+        <ToggleLocale />
       </div>
       <AModal v-model:visible="serverDataModal.visible" :title="t('title.serverInfo')" :on-before-ok="handleBeforeOk">
         <AForm :model="serverDataForm">

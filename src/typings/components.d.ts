@@ -20,16 +20,14 @@ declare module 'vue' {
     AInput: typeof import('@arco-design/web-vue')['Input']
     ALayout: typeof import('@arco-design/web-vue')['Layout']
     ALayoutContent: typeof import('@arco-design/web-vue')['LayoutContent']
-    ALayoutFooter: typeof import('@arco-design/web-vue')['LayoutFooter']
     ALayoutHeader: typeof import('@arco-design/web-vue')['LayoutHeader']
     ALayoutSider: typeof import('@arco-design/web-vue')['LayoutSider']
     AMenu: typeof import('@arco-design/web-vue')['Menu']
     AMenuItem: typeof import('@arco-design/web-vue')['MenuItem']
     AModal: typeof import('@arco-design/web-vue')['Modal']
     AScrollbar: typeof import('@arco-design/web-vue')['Scrollbar']
-    LayoutNavBar: typeof import('./../components/layout/nav-bar.vue')['default']
-    LayoutSideBar: typeof import('./../components/layout/side-bar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ToggleLocale: typeof import('./../components/toggle-locale.vue')['default']
   }
 }

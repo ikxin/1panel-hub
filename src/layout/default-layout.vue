@@ -1,10 +1,13 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import NavBar from '@/layout/nav-bar.vue'
+import SideBar from '@/layout/side-bar.vue'
+</script>
 
 <template>
   <ALayout class="h-full">
-    <LayoutNavBar />
+    <NavBar />
     <ALayout>
-      <LayoutSideBar />
+      <SideBar />
       <ALayoutContent class="p-4">
         <RouterView />
       </ALayoutContent>

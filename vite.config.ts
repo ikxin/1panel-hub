@@ -40,7 +40,6 @@ export default defineConfig(async () => ({
           sideEffect: false,
         }),
       ],
-      directoryAsNamespace: true,
     }),
     VueDevTools(),
   ],

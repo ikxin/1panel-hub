@@ -13,15 +13,21 @@ const locales = createI18n({
 
 export default locales
 
-export const languages = [
+export interface LocaleType {
+  lable: string
+  prop: 'zh' | 'en'
+  flag: string
+}
+
+export const _locales: LocaleType[] = [
   {
     lable: 'label.zh',
-    value: 'zh',
-    icon: 'i-flag:cn-4x3',
+    prop: 'zh',
+    flag: 'i-flag:cn-4x3',
   },
   {
     lable: 'label.en',
-    value: 'en',
-    icon: 'i-flag:us-4x3',
+    prop: 'en',
+    flag: 'i-flag:us-4x3',
   },
 ]

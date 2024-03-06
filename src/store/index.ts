@@ -1,18 +1,16 @@
+import { LocaleType } from '@/locales'
 import { RemovableRef } from '@vueuse/core'
 
 export const useGlobalStore = defineStore('global', () => {
   const { locale } = useI18n()
 
-  const language: RemovableRef<string> = useStorage('language', 'zh')
+  const _locale: RemovableRef<LocaleType['prop']> = useStorage<LocaleType['prop']>('locale', 'zh')
 
-  locale.value = language.value
-
-  const toggleLanguage = (lang: string) => {
-    language.value = locale.value = lang
-  }
+  watchEffect(() => {
+    locale.value = _locale.value
+  })
 
   return {
-    language,
-    toggleLanguage,
+    locale: _locale,
   }
 })
