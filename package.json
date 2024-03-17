@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri dev",
+    "tauri-build": "tauri build --debug"
   },
   "dependencies": {
     "@tauri-apps/api": "2.0.0-beta.4",
@@ -15,35 +15,29 @@
     "vue": "^3.4.21"
   },
   "devDependencies": {
-    "@arco-design/web-vue": "^2.54.6",
-    "@biomejs/biome": "^1.5.3",
+    "@arco-design/web-vue": "^2.55.0",
+    "@biomejs/biome": "^1.6.1",
     "@iconify-json/flag": "^1.1.49",
-    "@intlify/unplugin-vue-i18n": "^3.0.0",
+    "@intlify/unplugin-vue-i18n": "^3.0.1",
     "@tauri-apps/cli": "2.0.0-beta.8",
     "@tauri-apps/plugin-http": "2.0.0-beta.2",
-    "@types/node": "^20.11.25",
-    "@unocss/reset": "^0.58.5",
+    "@types/node": "^20.11.28",
+    "@unocss/reset": "^0.58.6",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vueuse/core": "^10.9.0",
     "@vueuse/integrations": "^10.9.0",
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "internal-ip": "^8.0.0",
     "pinia": "^2.1.7",
-    "prettier": "^3.2.5",
     "typescript": "^5.4.2",
-    "unocss": "^0.58.5",
+    "unocss": "^0.58.6",
     "unplugin-auto-import": "^0.17.5",
     "unplugin-vue-components": "^0.26.0",
-    "unplugin-vue-router": "^0.8.4",
-    "vite": "^5.1.5",
-    "vite-plugin-vue-devtools": "^7.0.16",
-    "vue-i18n": "^9.10.1",
+    "unplugin-vue-router": "^0.8.5",
+    "vite": "^5.1.6",
+    "vite-plugin-vue-devtools": "^7.0.18",
+    "vue-i18n": "^9.10.2",
     "vue-router": "^4.3.0",
     "vue-tsc": "^2.0.6"
-  },
-  "prettier": {
-    "printWidth": 120,
-    "semi": false,
-    "singleQuote": true
   }
 }
