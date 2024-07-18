@@ -11,6 +11,9 @@ importers:
       '@tauri-apps/cli':
         specifier: 2.0.0-beta.22
         version: 2.0.0-beta.22
+      '@tauri-apps/plugin-http':
+        specifier: 2.0.0-beta.8
+        version: 2.0.0-beta.8
       nuxt:
         specifier: ^3.12.3
         version: 3.12.3(@parcel/watcher@2.4.1)(@types/node@20.11.28)(ioredis@5.4.1)(magicast@0.3.4)(rollup@4.18.1)(terser@5.31.3)(typescript@5.4.2)(vite@5.3.4(@types/node@20.11.28)(terser@5.31.3))(vue-tsc@2.0.6(typescript@5.4.2))
@@ -1178,6 +1181,10 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
+  '@tauri-apps/api@2.0.0-beta.15':
+    resolution: {integrity: sha512-H9w6iISmR+NvH4XuyCZB4zDN10tf9RFt6i/9JHEjaRhAowdAaJ+oiXq/3kedizNClHMtbTQ5j0oqDVPkZDAI8g==}
+    engines: {node: '>= 18.18', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
+
   '@tauri-apps/cli-darwin-arm64@2.0.0-beta.22':
     resolution: {integrity: sha512-Ofhythvg1Ks2IM87WUYNtgFzm21aU1Zn+8QP81lJy9Y7ZGMxP8FYfqeHz6GIWKI+CYf6I77HA8LHkT9pyE5PYg==}
     engines: {node: '>= 10'}
@@ -1246,6 +1253,9 @@ packages:
     resolution: {integrity: sha512-OAuiDdSRKxNmr/dseQKKMoZZxIhQ6aAxmXJctGYJxCnkd62tQ8xeq87roVXGNS5Qkuv7WpySAyR0ntiMjvNLUA==}
     engines: {node: '>= 10'}
     hasBin: true
+
+  '@tauri-apps/plugin-http@2.0.0-beta.8':
+    resolution: {integrity: sha512-FhZP4WtS1o69Mn7z2RpNIdVS+2nPqmXyz6LhqweuP1FTjgTVraVxIfGLQCOMLpEUwo8zWY2uChllolV6WGYZ/A==}
 
   '@trysound/sax@0.2.0':
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
@@ -4696,6 +4706,8 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
+  '@tauri-apps/api@2.0.0-beta.15': {}
+
   '@tauri-apps/cli-darwin-arm64@2.0.0-beta.22':
     optional: true
 
@@ -4738,6 +4750,10 @@ snapshots:
       '@tauri-apps/cli-win32-arm64-msvc': 2.0.0-beta.22
       '@tauri-apps/cli-win32-ia32-msvc': 2.0.0-beta.22
       '@tauri-apps/cli-win32-x64-msvc': 2.0.0-beta.22
+
+  '@tauri-apps/plugin-http@2.0.0-beta.8':
+    dependencies:
+      '@tauri-apps/api': 2.0.0-beta.15
 
   '@trysound/sax@0.2.0': {}
 

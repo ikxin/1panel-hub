@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "identifier": "com.1panel.hub",
   "build": {
-    "beforeDevCommand": "pnpm dev",
+    "beforeDevCommand": "pnpm web:dev",
     "beforeBuildCommand": "pnpm generate",
     "devUrl": "http://localhost:3000",
     "frontendDist": "../dist"
@@ -12,8 +12,8 @@
     "windows": [
       {
         "title": "1Panel Hub",
-        "width": 800,
-        "height": 600,
+        "width": 1600,
+        "height": 1000,
         "resizable": true,
         "fullscreen": false
       }
