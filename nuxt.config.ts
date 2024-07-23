@@ -1,11 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: false,
+  extends: ['@nuxt/ui-pro'],
+  modules: ['@nuxt/ui', '@nuxt/eslint'],
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   devServer: { host: '0.0.0.0' },
   future: {
-    compatibilityVersion: 4
+    compatibilityVersion: 4,
   },
   vite: {
     // 为 Tauri 命令输出提供更好的支持
@@ -24,6 +26,15 @@ export default defineNuxtConfig({
         host: '0.0.0.0',
         // 使用 hmr 的特定端口
         port: 5183,
+      },
+    },
+  },
+  eslint: {
+    config: {
+      stylistic: {
+        indent: 2,
+        quotes: 'single',
+        semi: false,
       },
     },
   },
