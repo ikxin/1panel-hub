@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   ssr: false,
   extends: ['@nuxt/ui-pro'],
-  modules: ['@nuxt/ui', '@nuxt/eslint'],
+  modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxtjs/i18n'],
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   devServer: { host: '0.0.0.0' },
@@ -37,5 +37,14 @@ export default defineNuxtConfig({
         semi: false,
       },
     },
+  },
+  i18n: {
+    defaultLocale: 'en',
+    langDir: 'locales',
+    locales: [
+      { code: 'en', file: 'en.json', name: 'English' },
+      { code: 'zh-cn', file: 'zh-cn.json', name: '简体中文' },
+    ],
+    strategy: 'no_prefix',
   },
 })
