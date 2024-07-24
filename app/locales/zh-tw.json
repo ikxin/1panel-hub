@@ -1,0 +1,11 @@
+{
+  "label": {
+    "create-client": "創建客戶端",
+    "host": "主機名",
+    "port": "端口",
+    "username": "用戶名",
+    "password": "密碼",
+    "https": "HTTPS",
+    "entrance": "入口地址"
+  }
+}

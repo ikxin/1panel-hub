@@ -1,0 +1,11 @@
+{
+  "label": {
+    "create-client": "Klant maken",
+    "host": "Hostnaam",
+    "port": "Poort",
+    "username": "Gebruikersnaam",
+    "password": "Wachtwoord",
+    "https": "HTTPS",
+    "entrance": "Toegangsadres"
+  }
+}

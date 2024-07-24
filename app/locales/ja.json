@@ -1,0 +1,11 @@
+{
+  "label": {
+    "create-client": "クライアントを作成",
+    "host": "ホスト名",
+    "port": "ポート",
+    "username": "ユーザー名",
+    "password": "パスワード",
+    "https": "HTTPS",
+    "entrance": "入口アドレス"
+  }
+}

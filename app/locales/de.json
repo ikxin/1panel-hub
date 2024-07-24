@@ -1,0 +1,11 @@
+{
+  "label": {
+    "create-client": "Client erstellen",
+    "host": "Hostname",
+    "port": "Port",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "https": "HTTPS",
+    "entrance": "Eingangsadresse"
+  }
+}

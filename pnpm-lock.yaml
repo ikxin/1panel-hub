@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@iconify-json/flag':
+        specifier: ^1.1.53
+        version: 1.1.53
       '@nuxt/eslint':
         specifier: ^0.3.13
         version: 0.3.13(eslint@8.57.0)(magicast@0.3.4)(rollup@4.18.1)(typescript@5.4.2)(vite@5.3.4(@types/node@20.11.28)(terser@5.31.3))
@@ -853,6 +856,9 @@ packages:
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
+
+  '@iconify-json/flag@1.1.53':
+    resolution: {integrity: sha512-TdnS0AAmPnbwg3WdKavUQeyjUJZCp/0O6HsvdnBlpQ7DwcJD36ENvo0FE7BLdte/6haAKOKqnU6H+gvxCdrONQ==}
 
   '@iconify-json/heroicons@1.1.22':
     resolution: {integrity: sha512-UNfSBdD/JBYBvFFhce6e3FsmeqshGz8u964R36npJvIzuORhIHUXrFerulBWFmbG0V1xvMqLZVZc4bPyjP5p7A==}
@@ -5621,6 +5627,10 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/object-schema@2.0.3': {}
+
+  '@iconify-json/flag@1.1.53':
+    dependencies:
+      '@iconify/types': 2.0.0
 
   '@iconify-json/heroicons@1.1.22':
     dependencies:

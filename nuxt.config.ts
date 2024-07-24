@@ -29,6 +29,9 @@ export default defineNuxtConfig({
       },
     },
   },
+  ui: {
+    icons: ['flag'],
+  },
   eslint: {
     config: {
       stylistic: {
@@ -39,11 +42,18 @@ export default defineNuxtConfig({
     },
   },
   i18n: {
-    defaultLocale: 'en',
+    defaultLocale: 'zh-cn',
     langDir: 'locales',
     locales: [
-      { code: 'en', file: 'en.json', name: 'English' },
       { code: 'zh-cn', file: 'zh-cn.json', name: '简体中文' },
+      { code: 'zh-tw', file: 'zh-tw.json', name: '繁體中文' },
+      { code: 'de', file: 'de.json', name: 'Deutsch' },
+      { code: 'en', file: 'en.json', name: 'English' },
+      { code: 'fr', file: 'fr.json', name: 'Français' },
+      { code: 'ja', file: 'ja.json', name: '日本語' },
+      { code: 'ko', file: 'ko.json', name: '한국어' },
+      { code: 'nl', file: 'nl.json', name: 'Nederlands' },
+      { code: 'ru', file: 'ru.json', name: 'Русский' },
     ],
     strategy: 'no_prefix',
   },
