@@ -6,6 +6,13 @@
     "username": "用户名",
     "password": "密码",
     "https": "HTTPS",
-    "entrance": "入口地址"
+    "entrance": "入口地址",
+    "token": "Token"
+  },
+  "button": {
+    "create": "创建",
+    "submit": "提交",
+    "cancel": "取消",
+    "get-token": "获取 @:label.token"
   }
 }

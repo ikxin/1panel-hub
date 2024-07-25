@@ -2,12 +2,25 @@
 export default defineNuxtConfig({
   ssr: false,
   extends: ['@nuxt/ui-pro'],
-  modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxtjs/i18n'],
+  modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxtjs/i18n', '@vueuse/nuxt'],
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   devServer: { host: '0.0.0.0' },
   future: {
     compatibilityVersion: 4,
+  },
+  runtimeConfig: {
+    public: {
+      dev: {
+        name: '',
+        host: '',
+        port: 10000,
+        username: '',
+        password: '',
+        https: false,
+        entrance: '',
+      },
+    },
   },
   vite: {
     // 为 Tauri 命令输出提供更好的支持
@@ -35,9 +48,9 @@ export default defineNuxtConfig({
   eslint: {
     config: {
       stylistic: {
+        braceStyle: '1tbs',
         indent: 2,
         quotes: 'single',
-        semi: false,
       },
     },
   },

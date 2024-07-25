@@ -20,8 +20,17 @@
     "@nuxtjs/i18n": "^8.3.1",
     "@tauri-apps/cli": "2.0.0-beta.22",
     "@tauri-apps/plugin-http": "2.0.0-beta.8",
+    "@vueuse/core": "^10.11.0",
+    "@vueuse/nuxt": "^10.11.0",
     "nuxt": "^3.12.3",
     "tailwindcss": "^3.4.6",
     "zod": "^3.23.8"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "singleAttributePerLine": true,
+    "trailingComma": "all"
   }
 }
