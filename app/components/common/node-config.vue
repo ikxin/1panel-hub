@@ -1,14 +1,8 @@
 <script lang="ts" setup>
 import { fetch } from '@tauri-apps/plugin-http'
-import { z } from 'zod'
 import { useStorage } from '@vueuse/core'
-import type { FormSubmitEvent } from '#ui/types'
-
-const runtimeConfig = useRuntimeConfig()
-
-const form = ref()
-
-const clientData = useStorage<{ [key: string]: Schema }>('client-data', {})
+import { z } from 'zod'
+import type { FormSubmitEvent, Form } from '#ui/types'
 
 const schema = z.object({
   name: z.string().min(1),
@@ -17,11 +11,13 @@ const schema = z.object({
   username: z.string().min(1),
   password: z.string().min(1),
   https: z.boolean(),
-  entrance: z.string().min(1),
+  entrance: z.string(),
   token: z.string().min(1),
 })
 
-type Schema = z.output<typeof schema>
+export type Schema = z.output<typeof schema>
+
+const runtimeConfig = useRuntimeConfig()
 
 const state = reactive<Schema>({
   name: runtimeConfig.public.dev.name || '',
@@ -33,6 +29,8 @@ const state = reactive<Schema>({
   entrance: runtimeConfig.public.dev.entrance || '',
   token: '',
 })
+
+const form = ref<Form<Schema>>()
 
 const loading = ref(false)
 
@@ -71,21 +69,63 @@ const getToken = async (loginInfo: Schema) => {
   }
 }
 
+const visible = defineModel<boolean>()
+
+const nodeConfig = useStorage<Schema[]>('node-config', [])
+
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   const { name } = event.data
-  clientData.value[name] = event.data
+  const index = nodeConfig.value.findIndex(item => item.name === name)
+
+  if (index === -1) {
+    nodeConfig.value.push(event.data)
+  } else {
+    nodeConfig.value[index] = event.data
+  }
+
+  visible.value = false
 }
+
+watch(visible, (value) => {
+  if (!value) {
+    state.token = ''
+    state.name = ''
+    state.host = ''
+    state.port = 10000
+    state.username = ''
+    state.password = ''
+    state.https = false
+    state.entrance = ''
+    state.token = ''
+  }
+})
 </script>
 
 <template>
-  <UModal>
+  <UModal
+    v-model="visible"
+    prevent-close
+  >
     <UCard
       :ui="{
         ring: '',
         divide: 'divide-y divide-gray-100 dark:divide-gray-800',
       }"
     >
-      <template #header />
+      <template #header>
+        <div class="flex items-center justify-between">
+          <h2 class="font-bold">
+            {{ $t('label.create-client') }}
+          </h2>
+          <UButton
+            color="gray"
+            variant="ghost"
+            size="xs"
+            icon="i-heroicons-x-mark-20-solid"
+            @click="visible = false"
+          />
+        </div>
+      </template>
 
       <UForm
         ref="form"
@@ -160,7 +200,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
         </UFormGroup>
       </UForm>
       <template #footer>
-        <UButton @click="form.submit()">
+        <UButton @click="form?.submit()">
           {{ $t('button.submit') }}
         </UButton>
       </template>
