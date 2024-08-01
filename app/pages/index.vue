@@ -2,23 +2,21 @@
 import { useStorage } from '@vueuse/core'
 import { fetch } from '@tauri-apps/plugin-http'
 import type { Schema as NodeConfigSchema } from '~/components/common/node-config.vue'
+import type { BaseInfo, CurrentInfo } from '~/types/dashboard'
 
 const visible = ref(false)
 
 const nodeConfig = useStorage<NodeConfigSchema[]>('node-config', [])
 
-const nodeStatus = useStorage<any>('node-status', [])
+const nodeStatus = useStorage<BaseInfo[]>('node-status', [])
 
-useIntervalFn(async () => {
-  for (const item in nodeConfig.value) {
-    if (!nodeConfig.value[item]) {
-      return
-    }
-    const { name, host, port, https, token } = nodeConfig.value[item]
+useIntervalFn(() => {
+  nodeConfig.value.forEach(async (item, index) => {
+    const { host, port, https, token } = item
     const response = await fetch(
       `${
         https ? 'https' : 'http'
-      }://${host}:${port}/api/v1/dashboard/current/all/all`,
+      }://${host}:${port}/api/v1/dashboard/base/all/all`,
       {
         headers: {
           PanelAuthorization: token,
@@ -29,19 +27,9 @@ useIntervalFn(async () => {
     if (result.code !== 200) {
       console.log(result.message)
     } else {
-      const index = nodeStatus.value.findIndex(
-        (item: any) => item.name === name,
-      )
-
-      const assignData = Object.assign(result.data, { name })
-
-      if (index === -1) {
-        nodeStatus.value.push(assignData)
-      } else {
-        nodeStatus.value[index] = assignData
-      }
+      nodeStatus.value[index] = result.data?.currentInfo
     }
-  }
+  })
 }, 1000)
 
 const columns = [
@@ -54,17 +42,33 @@ const columns = [
     label: '节点名',
   },
   {
-    key: 'title',
+    key: 'host',
     label: 'IP',
   },
   {
-    key: 'email',
+    key: 'uptime',
     label: '在线时间',
   },
   {
-    key: 'role',
+    key: 'cpu',
+    label: 'CPU',
+  },
+  {
+    key: 'ram',
+    label: 'RAM',
+  },
+  {
+    key: 'rom',
+    label: 'ROM',
   },
 ]
+
+const nodeStatusData = computed(() =>
+  nodeConfig.value.map((item, index) => ({
+    ...item,
+    ...nodeStatus.value[index],
+  })),
+)
 </script>
 
 <template>
@@ -89,7 +93,36 @@ const columns = [
   >
     <UTable
       :columns
-      :rows="nodeStatus"
-    />
+      :rows="nodeStatusData"
+      :ui="{
+        th: {
+          base: 'whitespace-nowrap',
+        },
+      }"
+    >
+      <template #cpu-data="{ row }: { row: CurrentInfo }">
+        <UProgress
+          size="2xl"
+          :indicator="false"
+          :value="row.cpuUsedPercent"
+        />
+      </template>
+
+      <template #ram-data="{ row }: { row: CurrentInfo }">
+        <UProgress
+          size="2xl"
+          :indicator="false"
+          :value="row.memoryUsedPercent"
+        />
+      </template>
+
+      <template #rom-data="{ row }: { row: CurrentInfo }">
+        <UProgress
+          size="2xl"
+          :indicator="false"
+          :value="row.diskData?.[0]?.usedPercent"
+        />
+      </template>
+    </UTable>
   </main>
 </template>
