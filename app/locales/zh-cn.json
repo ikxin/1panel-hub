@@ -7,12 +7,25 @@
     "password": "密码",
     "https": "HTTPS",
     "entrance": "入口地址",
-    "token": "Token"
+    "token": "Token",
+    "status": "状态",
+    "node-name": "节点名称",
+    "uptime": "运行时间",
+    "load": "负载",
+    "network": "网络",
+    "cpu": "CPU",
+    "memory": "内存",
+    "disk": "磁盘",
+    "online": "在线",
+    "offline": "离线"
   },
   "button": {
     "create": "创建",
+    "edit": "编辑",
+    "delete": "删除",
     "submit": "提交",
     "cancel": "取消",
-    "get-token": "获取 @:label.token"
+    "get-token": "获取 @:label.token",
+    "enter-panel": "进入面板"
   }
 }

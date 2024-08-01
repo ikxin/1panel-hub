@@ -4,6 +4,10 @@ import { fetch } from '@tauri-apps/plugin-http'
 import type { Schema as NodeConfigSchema } from '~/components/common/node-config.vue'
 import type { BaseInfo, CurrentInfo } from '~/types/dashboard'
 
+const dayjs = useDayjs()
+
+const now = ref(Date.now())
+
 const visible = ref(false)
 
 const nodeConfig = useStorage<NodeConfigSchema[]>('node-config', [])
@@ -11,6 +15,7 @@ const nodeConfig = useStorage<NodeConfigSchema[]>('node-config', [])
 const nodeStatus = useStorage<BaseInfo[]>('node-status', [])
 
 useIntervalFn(() => {
+  now.value = Date.now()
   nodeConfig.value.forEach(async (item, index) => {
     const { host, port, https, token } = item
     const response = await fetch(
@@ -32,36 +37,51 @@ useIntervalFn(() => {
   })
 }, 1000)
 
-const columns = [
-  {
-    key: 'id',
-    label: '运行状态',
-  },
-  {
-    key: 'name',
-    label: '节点名',
-  },
-  {
-    key: 'host',
-    label: 'IP',
-  },
-  {
-    key: 'uptime',
-    label: '在线时间',
-  },
-  {
-    key: 'cpu',
-    label: 'CPU',
-  },
-  {
-    key: 'ram',
-    label: 'RAM',
-  },
-  {
-    key: 'rom',
-    label: 'ROM',
-  },
-]
+const { t } = useI18n()
+
+const columns = computed(() => {
+  return [
+    {
+      key: 'status',
+      label: t('label.status'),
+    },
+    {
+      key: 'name',
+      label: t('label.node-name'),
+    },
+    {
+      key: 'host',
+      label: t('label.host'),
+    },
+    {
+      key: 'uptime',
+      label: t('label.uptime'),
+    },
+    {
+      key: 'load',
+      label: t('label.load'),
+    },
+    {
+      key: 'network',
+      label: t('label.network'),
+    },
+    {
+      key: 'cpu',
+      label: t('label.cpu'),
+    },
+    {
+      key: 'memory',
+      label: t('label.memory'),
+    },
+    {
+      key: 'disk',
+      label: t('label.disk'),
+    },
+    {
+      key: 'action',
+    },
+  ]
+})
 
 const nodeStatusData = computed(() =>
   nodeConfig.value.map((item, index) => ({
@@ -76,7 +96,7 @@ const nodeStatusData = computed(() =>
     class="flex flex-col gap-4 h-64 justify-center items-center select-none cursor-pointer"
   >
     <div class="bg-black text-4xl font-extrabold p-5 rounded-lg">
-      <span class="mr-2">1Panel</span>
+      <span class="mr-2 text-white">1Panel</span>
       <span class="bg-[#ff9902] text-black py-1 px-2 rounded-md">Hub</span>
     </div>
 
@@ -100,28 +120,61 @@ const nodeStatusData = computed(() =>
         },
       }"
     >
+      <template #status-data="{ row }: { row: CurrentInfo }">
+        <template v-if="dayjs(row.shotTime).diff(now, 'second') < 0">
+          <UBadge
+            color="red"
+            :label="$t('label.offline')"
+          />
+        </template>
+        <template v-else>
+          <UBadge
+            color="primary"
+            :label="$t('label.online')"
+          />
+        </template>
+      </template>
+
+      <template #load-data="{ row }: { row: CurrentInfo }">
+        {{ `${row.load1} | ${row.load5} | ${row.load15}` }}
+      </template>
+
+      <template #network-data="{ row }: { row: CurrentInfo }">
+        {{
+          `${computeSize(row.netBytesSent)} | ${computeSize(row.netBytesRecv)}`
+        }}
+      </template>
+
       <template #cpu-data="{ row }: { row: CurrentInfo }">
         <UProgress
           size="2xl"
-          :indicator="false"
+          :indicator="true"
           :value="row.cpuUsedPercent"
         />
       </template>
 
-      <template #ram-data="{ row }: { row: CurrentInfo }">
+      <template #memory-data="{ row }: { row: CurrentInfo }">
         <UProgress
           size="2xl"
-          :indicator="false"
+          :indicator="true"
           :value="row.memoryUsedPercent"
         />
       </template>
 
-      <template #rom-data="{ row }: { row: CurrentInfo }">
+      <template #disk-data="{ row }: { row: CurrentInfo }">
         <UProgress
           size="2xl"
-          :indicator="false"
+          :indicator="true"
           :value="row.diskData?.[0]?.usedPercent"
         />
+      </template>
+
+      <template #action-data>
+        <div class="flex gap-2">
+          <UButton :label="$t('button.enter-panel')" />
+          <UButton :label="$t('button.edit')" />
+          <UButton :label="$t('button.delete')" />
+        </div>
       </template>
     </UTable>
   </main>

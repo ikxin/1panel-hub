@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   ssr: false,
   extends: ['@nuxt/ui-pro'],
-  modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxtjs/i18n', '@vueuse/nuxt'],
+  modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxtjs/i18n', '@vueuse/nuxt', 'dayjs-nuxt'],
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   devServer: { host: '0.0.0.0' },

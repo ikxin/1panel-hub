@@ -6,6 +6,26 @@
     "username": "User name",
     "password": "Password",
     "https": "HTTPS",
-    "entrance": "Entrance address"
+    "entrance": "Entrance address",
+    "token": "Token",
+    "status": "Status",
+    "node-name": "Node name",
+    "uptime": "Uptime",
+    "load": "Load",
+    "network": "Network",
+    "cpu": "CPU",
+    "memory": "Memory",
+    "disk": "Disk",
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "button": {
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "get-token": "Get @:label.token",
+    "enter-panel": "Enter Panel"
   }
 }
