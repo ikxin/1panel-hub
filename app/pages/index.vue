@@ -95,18 +95,19 @@ const nodeStatusData = computed(() =>
   <header
     class="flex flex-col gap-4 h-64 justify-center items-center select-none cursor-pointer"
   >
-    <div class="bg-black text-4xl font-extrabold p-5 rounded-lg">
-      <span class="mr-2 text-white">1Panel</span>
-      <span class="bg-[#ff9902] text-black py-1 px-2 rounded-md">Hub</span>
-    </div>
+    <Logo />
 
     <UButton
       :label="$t('label.create-client')"
       @click="visible = true"
     />
-    <CommonNodeConfig v-model="visible" />
 
-    <CommonSetLocale />
+    <div class="flex gap-2">
+      <CommonSetLocale />
+      <UColorModeButton />
+    </div>
+
+    <CommonNodeConfig v-model="visible" />
   </header>
   <main
     class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl gap-16 sm:gap-y-24 flex flex-col"
