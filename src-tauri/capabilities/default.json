@@ -13,7 +13,6 @@
     "core:image:default",
     "core:menu:default",
     "core:tray:default",
-    "http:default",
     {
       "identifier": "http:default",
       "allow": [
@@ -21,6 +20,7 @@
           "url": "http://*:*/*"
         }
       ]
-    }
+    },
+    "shell:default"
   ]
 }

@@ -3,6 +3,7 @@ import { useStorage } from '@vueuse/core'
 import { fetch } from '@tauri-apps/plugin-http'
 import type { Schema as NodeConfigSchema } from '~/components/common/node-config.vue'
 import type { BaseInfo, CurrentInfo } from '~/types/dashboard'
+import { computeSize } from '#imports'
 
 const dayjs = useDayjs()
 
@@ -105,6 +106,7 @@ const nodeStatusData = computed(() =>
     <div class="flex gap-2">
       <CommonSetLocale />
       <UColorModeButton />
+      <CommonGithub />
     </div>
 
     <CommonNodeConfig v-model="visible" />

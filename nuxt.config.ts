@@ -42,9 +42,6 @@ export default defineNuxtConfig({
       },
     },
   },
-  ui: {
-    icons: ['flag'],
-  },
   eslint: {
     config: {
       stylistic: {
