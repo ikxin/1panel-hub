@@ -75,12 +75,12 @@ const nodeConfig = useStorage<Schema[]>('node-config', [])
 
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   const { name } = event.data
-  const index = nodeConfig.value.findIndex(item => item.name === name)
+  const index = nodeConfig.value.findIndex((item) => item.name === name)
 
   if (index === -1) {
-    nodeConfig.value.push(event.data)
+    nodeConfig.value.push({...event.data})
   } else {
-    nodeConfig.value[index] = event.data
+    nodeConfig.value[index] = {...event.data}
   }
 
   visible.value = false
@@ -135,8 +135,15 @@ watch(visible, (value) => {
         @submit="onSubmit"
       >
         <UFormGroup
+          name="name"
+          :label="$t('label.node-name')"
+          required
+        >
+          <UInput v-model="state.name" />
+        </UFormGroup>
+        <UFormGroup
           name="host"
-          :label="$t('label.host')"
+          :label="$t('label.ip-addr')"
           required
         >
           <UInput v-model="state.host" />

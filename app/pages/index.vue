@@ -51,7 +51,7 @@ const columns = computed(() => {
     },
     {
       key: 'host',
-      label: t('label.host'),
+      label: t('label.ip-addr'),
     },
     {
       key: 'uptime',
@@ -98,7 +98,7 @@ const nodeStatusData = computed(() =>
     <Logo />
 
     <UButton
-      :label="$t('label.create-client')"
+      :label="$t('label.create-node')"
       @click="visible = true"
     />
 

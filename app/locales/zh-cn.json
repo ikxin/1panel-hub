@@ -1,7 +1,7 @@
 {
   "label": {
-    "create-client": "创建客户端",
-    "host": "主机名",
+    "create-node": "创建节点",
+    "ip-addr": "IP 地址",
     "port": "端口",
     "username": "用户名",
     "password": "密码",
