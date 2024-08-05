@@ -2,7 +2,13 @@
 export default defineNuxtConfig({
   ssr: false,
   extends: ['@nuxt/ui-pro'],
-  modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxtjs/i18n', '@vueuse/nuxt', 'dayjs-nuxt'],
+  modules: [
+    '@nuxt/ui',
+    '@nuxt/eslint',
+    '@nuxtjs/i18n',
+    '@vueuse/nuxt',
+    'dayjs-nuxt',
+  ],
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   devServer: { host: '0.0.0.0' },
@@ -66,5 +72,11 @@ export default defineNuxtConfig({
       { code: 'ru', file: 'ru.json', name: 'Русский' },
     ],
     strategy: 'no_prefix',
+  },
+  dayjs: {
+    locales: ['zh-cn', 'zh-tw', 'de', 'en', 'fr', 'ja', 'ko', 'nl', 'ru'],
+    plugins: ['duration', 'relativeTime', 'utc', 'timezone'],
+    defaultLocale: 'zh-cn',
+    defaultTimezone: 'Asia/Shanghai',
   },
 })

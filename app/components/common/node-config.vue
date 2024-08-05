@@ -115,7 +115,7 @@ watch(visible, (value) => {
       <template #header>
         <div class="flex items-center justify-between">
           <h2 class="font-bold">
-            {{ $t('label.create-client') }}
+            {{ $t('label.create-node') }}
           </h2>
           <UButton
             color="gray"

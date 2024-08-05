@@ -137,7 +137,7 @@ const nodeStatusData = computed(() =>
     <CommonNodeConfig v-model="visible" />
   </header>
   <main
-    class="mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl gap-16 sm:gap-y-24 flex flex-col"
+    class="mx-auto px-4 sm:px-6 lg:px-8 max-w-fit gap-16 sm:gap-y-24 flex flex-col"
   >
     <UTable
       :columns
@@ -150,7 +150,7 @@ const nodeStatusData = computed(() =>
     >
       <template #status-data="{ row }: { row: StatusInfo }">
         <template
-          v-if="dayjs(row.currentInfo?.shotTime).diff(now, 'second') < 0"
+          v-if="dayjs(now).diff(row.currentInfo?.shotTime, 'second') > 10"
         >
           <UBadge
             color="red"
@@ -163,6 +163,10 @@ const nodeStatusData = computed(() =>
             :label="$t('label.online')"
           />
         </template>
+      </template>
+
+      <template #currentInfo.uptime-data="{ row }: { row: StatusInfo }">
+        {{ dayjs.duration(row.currentInfo?.uptime, 'second').humanize() }}
       </template>
 
       <template #load-data="{ row }: { row: StatusInfo }">
