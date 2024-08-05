@@ -13,6 +13,7 @@
     "uptime": "运行时间",
     "load": "负载",
     "network": "网络",
+    "traffic": "流量",
     "cpu": "CPU",
     "memory": "内存",
     "disk": "磁盘",

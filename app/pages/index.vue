@@ -2,8 +2,13 @@
 import { useStorage } from '@vueuse/core'
 import { fetch } from '@tauri-apps/plugin-http'
 import type { Schema as NodeConfigSchema } from '~/components/common/node-config.vue'
-import type { BaseInfo, CurrentInfo } from '~/types/dashboard'
-import { computeSize } from '#imports'
+import type { BaseInfo } from '~/types/dashboard'
+import { computeSize, computeSizeFromByte } from '#imports'
+
+interface StatusInfo extends BaseInfo {
+  netBytesSentSpeed?: number
+  netBytesRecvSpeed?: number
+}
 
 const dayjs = useDayjs()
 
@@ -13,7 +18,7 @@ const visible = ref(false)
 
 const nodeConfig = useStorage<NodeConfigSchema[]>('node-config', [])
 
-const nodeStatus = useStorage<BaseInfo[]>('node-status', [])
+const nodeStatus = useStorage<StatusInfo[]>('node-status', [])
 
 useIntervalFn(() => {
   now.value = Date.now()
@@ -33,7 +38,23 @@ useIntervalFn(() => {
     if (result.code !== 200) {
       console.log(result.message)
     } else {
-      nodeStatus.value[index] = result.data?.currentInfo
+      const data = result.data as BaseInfo
+      if (!data) return
+      if (nodeStatus.value[index]) {
+        const netBytesSentSpeed =
+          data.currentInfo.netBytesSent -
+          nodeStatus.value[index].currentInfo.netBytesSent
+        const netBytesRecvSpeed =
+          data.currentInfo.netBytesRecv -
+          nodeStatus.value[index].currentInfo.netBytesRecv
+        nodeStatus.value[index] = {
+          netBytesSentSpeed,
+          netBytesRecvSpeed,
+          ...data,
+        }
+      } else {
+        nodeStatus.value[index] = { ...data }
+      }
     }
   })
 }, 1000)
@@ -55,7 +76,7 @@ const columns = computed(() => {
       label: t('label.ip-addr'),
     },
     {
-      key: 'uptime',
+      key: 'currentInfo.uptime',
       label: t('label.uptime'),
     },
     {
@@ -65,6 +86,10 @@ const columns = computed(() => {
     {
       key: 'network',
       label: t('label.network'),
+    },
+    {
+      key: 'traffic',
+      label: t('label.traffic'),
     },
     {
       key: 'cpu',
@@ -123,8 +148,10 @@ const nodeStatusData = computed(() =>
         },
       }"
     >
-      <template #status-data="{ row }: { row: CurrentInfo }">
-        <template v-if="dayjs(row.shotTime).diff(now, 'second') < 0">
+      <template #status-data="{ row }: { row: StatusInfo }">
+        <template
+          v-if="dayjs(row.currentInfo?.shotTime).diff(now, 'second') < 0"
+        >
           <UBadge
             color="red"
             :label="$t('label.offline')"
@@ -138,37 +165,55 @@ const nodeStatusData = computed(() =>
         </template>
       </template>
 
-      <template #load-data="{ row }: { row: CurrentInfo }">
-        {{ `${row.load1} | ${row.load5} | ${row.load15}` }}
-      </template>
-
-      <template #network-data="{ row }: { row: CurrentInfo }">
+      <template #load-data="{ row }: { row: StatusInfo }">
         {{
-          `${computeSize(row.netBytesSent)} | ${computeSize(row.netBytesRecv)}`
+          `${row.currentInfo?.load1} | ${row.currentInfo?.load5} | ${row.currentInfo?.load15}`
         }}
       </template>
 
-      <template #cpu-data="{ row }: { row: CurrentInfo }">
+      <template #network-data="{ row }: { row: StatusInfo }">
+        <div class="flex items-center gap-1 mb-1">
+          <UIcon name="i-mdi-download" />
+          <span>{{ computeSizeFromByte(row.netBytesRecvSpeed!) }}</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <UIcon name="i-mdi-upload" />
+          <span>{{ computeSizeFromByte(row.netBytesSentSpeed!) }}</span>
+        </div>
+      </template>
+
+      <template #traffic-data="{ row }: { row: StatusInfo }">
+        <div class="flex items-center gap-1 mb-1">
+          <UIcon name="i-mdi-download" />
+          <span>{{ computeSize(row.currentInfo?.netBytesRecv) }}</span>
+        </div>
+        <div class="flex items-center gap-1">
+          <UIcon name="i-mdi-upload" />
+          <span>{{ computeSize(row.currentInfo?.netBytesSent) }}</span>
+        </div>
+      </template>
+
+      <template #cpu-data="{ row }: { row: StatusInfo }">
         <UProgress
           size="2xl"
           :indicator="true"
-          :value="row.cpuUsedPercent"
+          :value="row.currentInfo?.cpuUsedPercent"
         />
       </template>
 
-      <template #memory-data="{ row }: { row: CurrentInfo }">
+      <template #memory-data="{ row }: { row: StatusInfo }">
         <UProgress
           size="2xl"
           :indicator="true"
-          :value="row.memoryUsedPercent"
+          :value="row.currentInfo?.memoryUsedPercent"
         />
       </template>
 
-      <template #disk-data="{ row }: { row: CurrentInfo }">
+      <template #disk-data="{ row }: { row: StatusInfo }">
         <UProgress
           size="2xl"
           :indicator="true"
-          :value="row.diskData?.[0]?.usedPercent"
+          :value="row.currentInfo?.diskData?.[0]?.usedPercent"
         />
       </template>
 
