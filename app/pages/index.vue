@@ -5,6 +5,10 @@ import type { Schema as NodeConfigSchema } from '~/components/common/node-config
 import type { BaseInfo } from '~/types/dashboard'
 import { computeSize, computeSizeFromByte } from '#imports'
 
+definePageMeta({
+  layout: false,
+})
+
 interface StatusInfo extends BaseInfo {
   netBytesSentSpeed?: number
   netBytesRecvSpeed?: number
@@ -121,7 +125,7 @@ const nodeStatusData = computed(() =>
   <header
     class="flex flex-col gap-4 h-64 justify-center items-center select-none cursor-pointer"
   >
-    <Logo />
+    <Logo class="w-64"/>
 
     <UButton
       :label="$t('label.create-node')"
