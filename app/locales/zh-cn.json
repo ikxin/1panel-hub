@@ -18,7 +18,20 @@
     "memory": "内存",
     "disk": "磁盘",
     "online": "在线",
-    "offline": "离线"
+    "offline": "离线",
+    "dashboard": "仪表盘",
+    "website": "网站",
+    "database": "数据库",
+    "docker": "Docker",
+    "monitor": "监控",
+    "firewall": "防火墙",
+    "waf": "WAF",
+    "files": "文件",
+    "logs": "日志",
+    "terminal": "终端",
+    "cronjob": "定时任务",
+    "appstore": "应用商店",
+    "settings": "设置"
   },
   "button": {
     "create": "创建",
