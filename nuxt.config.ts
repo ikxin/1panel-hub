@@ -1,20 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+const tauriDevHost = process.env.TAURI_DEV_HOST
+
 export default defineNuxtConfig({
+  modules: ['@nuxt/ui', '@nuxtjs/i18n', '@vueuse/nuxt', 'dayjs-nuxt'],
   ssr: false,
-  extends: ['@nuxt/ui-pro'],
-  modules: [
-    '@nuxt/ui',
-    '@nuxt/eslint',
-    '@nuxtjs/i18n',
-    '@vueuse/nuxt',
-    'dayjs-nuxt',
-  ],
-  compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  devServer: { host: '0.0.0.0' },
-  future: {
-    compatibilityVersion: 4,
-  },
+  css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
       dev: {
@@ -28,9 +19,14 @@ export default defineNuxtConfig({
       },
     },
   },
+  devServer: { host: tauriDevHost || 'localhost' },
+  compatibilityDate: '2024-04-03',
   vite: {
     // 为 Tauri 命令输出提供更好的支持
     clearScreen: false,
+    optimizeDeps: {
+      exclude: ['@nuxtjs/i18n'],
+    },
     // 启用环境变量
     // 其他环境变量可以在如下网页中获知：
     // https://v2.tauri.app/reference/environment-variables/
@@ -38,24 +34,20 @@ export default defineNuxtConfig({
     server: {
       // Tauri 需要一个确定的端口
       strictPort: true,
-      hmr: {
-        // 使用 WebSocket 以支持移动端热重载
-        protocol: 'ws',
-        // 确保它在网络上可用
-        host: '0.0.0.0',
-        // 使用 hmr 的特定端口
-        port: 5183,
-      },
+      hmr: tauriDevHost
+        ? {
+            protocol: 'ws',
+            host: tauriDevHost,
+            port: 5183,
+          }
+        : undefined,
     },
   },
-  eslint: {
-    config: {
-      stylistic: {
-        braceStyle: '1tbs',
-        indent: 2,
-        quotes: 'single',
-      },
-    },
+  dayjs: {
+    locales: ['zh-cn', 'zh-tw', 'de', 'en', 'fr', 'ja', 'ko', 'nl', 'ru'],
+    plugins: ['duration', 'relativeTime', 'utc', 'timezone'],
+    defaultLocale: 'zh-cn',
+    defaultTimezone: 'Asia/Shanghai',
   },
   i18n: {
     defaultLocale: 'zh-cn',
@@ -72,11 +64,5 @@ export default defineNuxtConfig({
       { code: 'ru', file: 'ru.json', name: 'Русский' },
     ],
     strategy: 'no_prefix',
-  },
-  dayjs: {
-    locales: ['zh-cn', 'zh-tw', 'de', 'en', 'fr', 'ja', 'ko', 'nl', 'ru'],
-    plugins: ['duration', 'relativeTime', 'utc', 'timezone'],
-    defaultLocale: 'zh-cn',
-    defaultTimezone: 'Asia/Shanghai',
   },
 })

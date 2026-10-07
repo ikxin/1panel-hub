@@ -15,26 +15,17 @@ const getIcon = (code: string) => {
   }?.[code]
 }
 
-const items = [
-  locales.value.map((locale) => {
-    return {
-      label: locale.name,
-      icon: getIcon(locale.code),
-      click: () => setLocale(locale.code),
-    }
-  }),
-]
+const items = computed(() => [
+  locales.value.map((locale) => ({
+    label: locale.name,
+    icon: getIcon(locale.code),
+    onSelect: () => setLocale(locale.code),
+  })),
+])
 </script>
 
 <template>
-  <UDropdown
-    :items
-    :popper="{ placement: 'bottom' }"
-  >
-    <UButton
-      variant="ghost"
-      color="gray"
-      icon="i-mdi-translate"
-    />
-  </UDropdown>
+  <UDropdownMenu :items="items" :content="{ side: 'bottom' }">
+    <UButton variant="ghost" color="neutral" icon="i-mdi-translate" />
+  </UDropdownMenu>
 </template>

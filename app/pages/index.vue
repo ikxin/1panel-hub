@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useStorage } from '@vueuse/core'
 import { fetch } from '@tauri-apps/plugin-http'
+import type { TableColumn } from '@nuxt/ui'
 import type { Schema as NodeConfigSchema } from '~/components/common/node-config.vue'
 import type { BaseInfo } from '~/types/dashboard'
 import { computeSize, computeSizeFromByte } from '#imports'
@@ -13,6 +14,8 @@ interface StatusInfo extends BaseInfo {
   netBytesSentSpeed?: number
   netBytesRecvSpeed?: number
 }
+
+type NodeStatusRow = NodeConfigSchema & Partial<StatusInfo>
 
 const dayjs = useDayjs()
 
@@ -29,9 +32,7 @@ useIntervalFn(() => {
   nodeConfig.value.forEach(async (item, index) => {
     const { host, port, https, token } = item
     const response = await fetch(
-      `${
-        https ? 'https' : 'http'
-      }://${host}:${port}/api/v1/dashboard/base/all/all`,
+      `${https ? 'https' : 'http'}://${host}:${port}/api/v1/dashboard/base/all/all`,
       {
         headers: {
           PanelAuthorization: token,
@@ -46,11 +47,9 @@ useIntervalFn(() => {
       if (!data) return
       if (nodeStatus.value[index]) {
         const netBytesSentSpeed =
-          data.currentInfo.netBytesSent -
-          nodeStatus.value[index].currentInfo.netBytesSent
+          data.currentInfo.netBytesSent - nodeStatus.value[index].currentInfo.netBytesSent
         const netBytesRecvSpeed =
-          data.currentInfo.netBytesRecv -
-          nodeStatus.value[index].currentInfo.netBytesRecv
+          data.currentInfo.netBytesRecv - nodeStatus.value[index].currentInfo.netBytesRecv
         nodeStatus.value[index] = {
           netBytesSentSpeed,
           netBytesRecvSpeed,
@@ -65,50 +64,53 @@ useIntervalFn(() => {
 
 const { t } = useI18n()
 
-const columns = computed(() => {
+const columns = computed<TableColumn<NodeStatusRow>[]>(() => {
   return [
     {
-      key: 'status',
-      label: t('label.status'),
+      id: 'status',
+      header: t('label.status'),
     },
     {
-      key: 'name',
-      label: t('label.node-name'),
+      accessorKey: 'name',
+      header: t('label.node-name'),
     },
     {
-      key: 'host',
-      label: t('label.ip-addr'),
+      accessorKey: 'host',
+      header: t('label.ip-addr'),
     },
     {
-      key: 'currentInfo.uptime',
-      label: t('label.uptime'),
+      id: 'uptime',
+      header: t('label.uptime'),
+      accessorFn: (row) => row.currentInfo?.uptime,
     },
     {
-      key: 'load',
-      label: t('label.load'),
+      id: 'load',
+      header: t('label.load'),
+      accessorFn: (row) => row.currentInfo?.load1,
     },
     {
-      key: 'network',
-      label: t('label.network'),
+      id: 'network',
+      header: t('label.network'),
     },
     {
-      key: 'traffic',
-      label: t('label.traffic'),
+      id: 'traffic',
+      header: t('label.traffic'),
     },
     {
-      key: 'cpu',
-      label: t('label.cpu'),
+      id: 'cpu',
+      header: t('label.cpu'),
     },
     {
-      key: 'memory',
-      label: t('label.memory'),
+      id: 'memory',
+      header: t('label.memory'),
     },
     {
-      key: 'disk',
-      label: t('label.disk'),
+      id: 'disk',
+      header: t('label.disk'),
     },
     {
-      key: 'action',
+      id: 'action',
+      header: '',
     },
   ]
 })
@@ -122,15 +124,10 @@ const nodeStatusData = computed(() =>
 </script>
 
 <template>
-  <header
-    class="flex flex-col gap-4 h-64 justify-center items-center select-none cursor-pointer"
-  >
-    <Logo class="w-64"/>
+  <header class="flex flex-col gap-4 h-64 justify-center items-center select-none cursor-pointer">
+    <Logo class="w-64" />
 
-    <UButton
-      :label="$t('label.create-node')"
-      @click="visible = true"
-    />
+    <UButton :label="$t('label.create-node')" @click="visible = true" />
 
     <div class="flex gap-2">
       <CommonSetLocale />
@@ -140,92 +137,68 @@ const nodeStatusData = computed(() =>
 
     <CommonNodeConfig v-model="visible" />
   </header>
-  <main
-    class="mx-auto px-4 sm:px-6 lg:px-8 max-w-fit gap-16 sm:gap-y-24 flex flex-col"
-  >
+  <main class="mx-auto px-4 sm:px-6 lg:px-8 max-w-fit gap-16 sm:gap-y-24 flex flex-col">
     <UTable
-      :columns
-      :rows="nodeStatusData"
+      :columns="columns"
+      :data="nodeStatusData"
       :ui="{
-        th: {
-          base: 'whitespace-nowrap',
-        },
+        th: 'whitespace-nowrap',
       }"
     >
-      <template #status-data="{ row }: { row: StatusInfo }">
-        <template
-          v-if="dayjs(now).diff(row.currentInfo?.shotTime, 'second') > 10"
-        >
-          <UBadge
-            color="red"
-            :label="$t('label.offline')"
-          />
+      <template #status-cell="{ row }">
+        <template v-if="dayjs(now).diff(row.original.currentInfo?.shotTime, 'second') > 10">
+          <UBadge color="error" variant="subtle" :label="$t('label.offline')" />
         </template>
         <template v-else>
-          <UBadge
-            color="primary"
-            :label="$t('label.online')"
-          />
+          <UBadge color="primary" variant="subtle" :label="$t('label.online')" />
         </template>
       </template>
 
-      <template #currentInfo.uptime-data="{ row }: { row: StatusInfo }">
-        {{ dayjs.duration(row.currentInfo?.uptime, 'second').humanize() }}
+      <template #uptime-cell="{ row }">
+        {{ dayjs.duration(row.original.currentInfo?.uptime ?? 0, 'second').humanize() }}
       </template>
 
-      <template #load-data="{ row }: { row: StatusInfo }">
+      <template #load-cell="{ row }">
         {{
-          `${row.currentInfo?.load1} | ${row.currentInfo?.load5} | ${row.currentInfo?.load15}`
+          `${row.original.currentInfo?.load1} | ${row.original.currentInfo?.load5} | ${row.original.currentInfo?.load15}`
         }}
       </template>
 
-      <template #network-data="{ row }: { row: StatusInfo }">
+      <template #network-cell="{ row }">
         <div class="flex items-center gap-1 mb-1">
           <UIcon name="i-mdi-download" />
-          <span>{{ computeSizeFromByte(row.netBytesRecvSpeed!) }}</span>
+          <span>{{ computeSizeFromByte(row.original.netBytesRecvSpeed ?? 0) }}</span>
         </div>
         <div class="flex items-center gap-1">
           <UIcon name="i-mdi-upload" />
-          <span>{{ computeSizeFromByte(row.netBytesSentSpeed!) }}</span>
+          <span>{{ computeSizeFromByte(row.original.netBytesSentSpeed ?? 0) }}</span>
         </div>
       </template>
 
-      <template #traffic-data="{ row }: { row: StatusInfo }">
+      <template #traffic-cell="{ row }">
         <div class="flex items-center gap-1 mb-1">
           <UIcon name="i-mdi-download" />
-          <span>{{ computeSize(row.currentInfo?.netBytesRecv) }}</span>
+          <span>{{ computeSize(row.original.currentInfo?.netBytesRecv ?? 0) }}</span>
         </div>
         <div class="flex items-center gap-1">
           <UIcon name="i-mdi-upload" />
-          <span>{{ computeSize(row.currentInfo?.netBytesSent) }}</span>
+          <span>{{ computeSize(row.original.currentInfo?.netBytesSent ?? 0) }}</span>
         </div>
       </template>
 
-      <template #cpu-data="{ row }: { row: StatusInfo }">
-        <UProgress
-          size="2xl"
-          :indicator="true"
-          :value="row.currentInfo?.cpuUsedPercent"
-        />
+      <template #cpu-cell="{ row }">
+        <UProgress size="2xl" :model-value="row.original.currentInfo?.cpuUsedPercent" />
       </template>
 
-      <template #memory-data="{ row }: { row: StatusInfo }">
-        <UProgress
-          size="2xl"
-          :indicator="true"
-          :value="row.currentInfo?.memoryUsedPercent"
-        />
+      <template #memory-cell="{ row }">
+        <UProgress size="2xl" :model-value="row.original.currentInfo?.memoryUsedPercent" />
       </template>
 
-      <template #disk-data="{ row }: { row: StatusInfo }">
-        <UProgress
-          size="2xl"
-          :indicator="true"
-          :value="row.currentInfo?.diskData?.[0]?.usedPercent"
-        />
+      <template #disk-cell="{ row }">
+        <UProgress size="2xl" :model-value="row.original.currentInfo?.diskData?.[0]?.usedPercent" />
       </template>
 
-      <template #action-data>
+      <template #action-cell>
         <div class="flex gap-2">
           <UButton :label="$t('button.enter-panel')" />
           <UButton :label="$t('button.edit')" />

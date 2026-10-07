@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import type { NavigationMenuItem } from '@nuxt/ui'
+
 const { t } = useI18n()
 
-const links = computed(() => {
+const links = computed<NavigationMenuItem[]>(() => {
   return [
     {
       label: t('label.dashboard'),
       icon: 'i-tabler-dashboard',
       to: '/dashboard',
-      draggable: true,
     },
     {
       label: t('label.website'),
@@ -62,28 +63,17 @@ const links = computed(() => {
 </script>
 
 <template>
-  <UDashboardLayout>
-    <UDashboardPanel
-      :width="200"
-      :resizable="{ min: 200, max: 300 }"
-      collapsible
-    >
-      <UDashboardNavbar :ui="{ left: 'items-center' }">
-        <template #left>
-          <Logo class="h-16 p-2" />
-        </template>
-      </UDashboardNavbar>
-      <UDashboardSidebar>
-        <UDashboardSidebarLinks
-          :ui="{
-            base: 'py-2 before:inset-0 mt-2',
-          }"
-          :links="links"
-        />
-      </UDashboardSidebar>
-    </UDashboardPanel>
-    <UDashboardPage>
-      <UDashboardPanel grow>
+  <UDashboardGroup unit="px">
+    <UDashboardSidebar resizable collapsible :min-size="200" :max-size="300" :default-size="200">
+      <template #header>
+        <Logo class="h-16 p-2" />
+      </template>
+      <template #default="{ collapsed }">
+        <UNavigationMenu :items="links" :collapsed="collapsed" orientation="vertical" />
+      </template>
+    </UDashboardSidebar>
+    <UDashboardPanel>
+      <template #header>
         <UDashboardNavbar>
           <template #right>
             <div class="flex gap-2">
@@ -93,10 +83,10 @@ const links = computed(() => {
             </div>
           </template>
         </UDashboardNavbar>
-        <UDashboardPanelContent>
-          <slot />
-        </UDashboardPanelContent>
-      </UDashboardPanel>
-    </UDashboardPage>
-  </UDashboardLayout>
+      </template>
+      <template #body>
+        <slot />
+      </template>
+    </UDashboardPanel>
+  </UDashboardGroup>
 </template>

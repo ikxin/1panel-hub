@@ -1,38 +1,46 @@
 {
   "name": "1panel-hub",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "packageManager": "pnpm@9.5.0",
   "scripts": {
     "app:build": "tauri build --debug",
     "app:dev": "tauri dev",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
     "web:build": "nuxt build",
     "web:dev": "nuxt dev",
     "generate": "nuxt generate",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/eslint": "^0.4.0",
-    "@nuxt/ui-pro": "^1.4.0",
-    "@nuxtjs/i18n": "^8.3.3",
-    "@tauri-apps/cli": "2.0.0-rc.1",
-    "@tauri-apps/plugin-http": "2.0.0-rc.0",
-    "@tauri-apps/plugin-shell": "2.0.0-rc.0",
-    "@vueuse/core": "^10.11.0",
-    "@vueuse/nuxt": "^10.11.0",
-    "dayjs": "^1.11.12",
-    "dayjs-nuxt": "^2.1.9",
-    "nuxt": "^3.12.4",
-    "tailwindcss": "^3.4.7",
-    "zod": "^3.23.8"
+    "@nuxt/ui": "^4.11.3",
+    "@nuxtjs/i18n": "^10.6.0",
+    "@tauri-apps/api": "^2.12.1",
+    "@tauri-apps/cli": "^2.12.1",
+    "@tauri-apps/plugin-http": "^2.8.0",
+    "@tauri-apps/plugin-shell": "^2.4.0",
+    "@vueuse/core": "^15.0.0",
+    "@vueuse/nuxt": "^15.0.0",
+    "dayjs": "^1.11.23",
+    "dayjs-nuxt": "^2.1.11",
+    "nuxt": "^4.6.0",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.5"
   },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true,
-    "tabWidth": 2,
-    "singleAttributePerLine": true,
-    "trailingComma": "all"
-  }
+  "devDependencies": {
+    "@nuxt/eslint-plugin": "^1.17.0",
+    "@types/node": "^26.6.4",
+    "oxfmt": "^0.72.0",
+    "oxlint": "^1.87.0",
+    "typescript": "6.0.3",
+    "vue-tsc": "^3.3.12"
+  },
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "packageManager": "pnpm@12.9.1"
 }

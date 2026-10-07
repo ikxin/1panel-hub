@@ -7,13 +7,9 @@ watchEffect(() => dayjs.locale(locale.value))
 </script>
 
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <UApp>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </UApp>
 </template>
-
-<style>
-body {
-  @apply select-none;
-}
-</style>

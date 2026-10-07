@@ -2,7 +2,7 @@
 import { fetch } from '@tauri-apps/plugin-http'
 import { useStorage } from '@vueuse/core'
 import { z } from 'zod'
-import type { FormSubmitEvent, Form } from '#ui/types'
+import type { FormSubmitEvent } from '@nuxt/ui'
 
 const schema = z.object({
   name: z.string().min(1),
@@ -30,7 +30,7 @@ const state = reactive<Schema>({
   token: '',
 })
 
-const form = ref<Form<Schema>>()
+const form = ref<{ submit: () => void }>()
 
 const loading = ref(false)
 
@@ -78,9 +78,9 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
   const index = nodeConfig.value.findIndex((item) => item.name === name)
 
   if (index === -1) {
-    nodeConfig.value.push({...event.data})
+    nodeConfig.value.push({ ...event.data })
   } else {
-    nodeConfig.value[index] = {...event.data}
+    nodeConfig.value[index] = { ...event.data }
   }
 
   visible.value = false
@@ -102,115 +102,66 @@ watch(visible, (value) => {
 </script>
 
 <template>
-  <UModal
-    v-model="visible"
-    prevent-close
-  >
-    <UCard
-      :ui="{
-        ring: '',
-        divide: 'divide-y divide-gray-100 dark:divide-gray-800',
-      }"
-    >
-      <template #header>
-        <div class="flex items-center justify-between">
-          <h2 class="font-bold">
-            {{ $t('label.create-node') }}
-          </h2>
-          <UButton
-            color="gray"
-            variant="ghost"
-            size="xs"
-            icon="i-heroicons-x-mark-20-solid"
-            @click="visible = false"
-          />
-        </div>
-      </template>
-
-      <UForm
-        ref="form"
-        class="space-y-4"
-        :schema
-        :state
-        @submit="onSubmit"
-      >
-        <UFormGroup
-          name="name"
-          :label="$t('label.node-name')"
-          required
-        >
-          <UInput v-model="state.name" />
-        </UFormGroup>
-        <UFormGroup
-          name="host"
-          :label="$t('label.ip-addr')"
-          required
-        >
-          <UInput v-model="state.host" />
-        </UFormGroup>
-        <UFormGroup
-          name="port"
-          :label="$t('label.port')"
-          required
-        >
-          <UInput
-            v-model="state.port"
-            type="number"
-          />
-        </UFormGroup>
-        <UFormGroup
-          name="username"
-          :label="$t('label.username')"
-          required
-        >
-          <UInput v-model="state.username" />
-        </UFormGroup>
-        <UFormGroup
-          name="password"
-          :label="$t('label.password')"
-          required
-        >
-          <UInput v-model="state.password" />
-        </UFormGroup>
-        <UFormGroup
-          name="https"
-          :label="$t('label.https')"
-          required
-        >
-          <UToggle v-model="state.https" />
-        </UFormGroup>
-        <UFormGroup
-          name="entrance"
-          :label="$t('label.entrance')"
-        >
-          <UInput v-model="state.entrance" />
-        </UFormGroup>
-        <UFormGroup
-          name="token"
-          :label="$t('label.token')"
-          required
-        >
-          <div class="flex items-center gap-2">
-            <UInput
-              v-model="state.token"
-              disabled
-              class="w-full"
-            />
+  <UModal v-model:open="visible" :dismissible="false">
+    <template #content>
+      <UCard>
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h2 class="font-bold">
+              {{ $t('label.create-node') }}
+            </h2>
             <UButton
-              :loading
-              variant="outline"
-              @click="getToken(state)"
-            >
-              {{ $t('button.get-token') }}
-            </UButton>
+              color="neutral"
+              variant="ghost"
+              size="xs"
+              icon="i-heroicons-x-mark-20-solid"
+              @click="visible = false"
+            />
           </div>
-        </UFormGroup>
-      </UForm>
-      <template #footer>
-        <UButton @click="form?.submit()">
-          {{ $t('button.submit') }}
-        </UButton>
-      </template>
-    </UCard>
+        </template>
+
+        <UForm ref="form" class="space-y-4" :schema :state @submit="onSubmit">
+          <UFormField name="name" :label="$t('label.node-name')" required>
+            <UInput v-model="state.name" class="w-full" />
+          </UFormField>
+          <UFormField name="host" :label="$t('label.ip-addr')" required>
+            <UInput v-model="state.host" class="w-full" />
+          </UFormField>
+          <UFormField name="port" :label="$t('label.port')" required>
+            <UInput v-model="state.port" type="number" class="w-full" />
+          </UFormField>
+          <UFormField name="username" :label="$t('label.username')" required>
+            <UInput v-model="state.username" class="w-full" />
+          </UFormField>
+          <UFormField name="password" :label="$t('label.password')" required>
+            <UInput v-model="state.password" class="w-full" />
+          </UFormField>
+          <UFormField name="https" :label="$t('label.https')" required>
+            <USwitch v-model="state.https" />
+          </UFormField>
+          <UFormField name="entrance" :label="$t('label.entrance')">
+            <UInput v-model="state.entrance" class="w-full" />
+          </UFormField>
+          <UFormField name="token" :label="$t('label.token')" required>
+            <div class="flex items-center gap-2">
+              <UInput v-model="state.token" disabled class="w-full" />
+              <UButton
+                :loading
+                variant="outline"
+                class="shrink-0 whitespace-nowrap"
+                @click="getToken(state)"
+              >
+                {{ $t('button.get-token') }}
+              </UButton>
+            </div>
+          </UFormField>
+        </UForm>
+        <template #footer>
+          <UButton @click="form?.submit()">
+            {{ $t('button.submit') }}
+          </UButton>
+        </template>
+      </UCard>
+    </template>
   </UModal>
 </template>
