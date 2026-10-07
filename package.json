@@ -8,36 +8,37 @@
     "app:dev": "tauri dev",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "web:build": "nuxt build",
-    "web:dev": "nuxt dev",
-    "generate": "nuxt generate",
+    "web:build": "pnpm typecheck && vite build",
+    "web:dev": "vite",
+    "generate": "pnpm web:build",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.11.3",
-    "@nuxtjs/i18n": "^10.6.0",
+    "@douyinfe/semi-icons": "^2.103.0",
+    "@douyinfe/semi-ui": "^2.103.0",
     "@tauri-apps/api": "^2.12.1",
-    "@tauri-apps/cli": "^2.12.1",
     "@tauri-apps/plugin-http": "^2.8.0",
     "@tauri-apps/plugin-shell": "^2.4.0",
-    "@vueuse/core": "^15.0.0",
-    "@vueuse/nuxt": "^15.0.0",
     "dayjs": "^1.11.23",
-    "dayjs-nuxt": "^2.1.11",
-    "nuxt": "^4.6.0",
-    "tailwindcss": "^4.3.3",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@nuxt/eslint-plugin": "^1.17.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@tauri-apps/cli": "^2.12.1",
     "@types/node": "^26.6.4",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.1.2",
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
+    "tailwindcss": "^4.3.3",
     "typescript": "6.0.3",
-    "vue-tsc": "^3.3.12"
+    "vite": "^8.3.3"
   },
   "engines": {
     "node": "^22.22.3 || ^24.15.0 || >=26.0.0"

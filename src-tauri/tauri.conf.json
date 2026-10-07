@@ -4,7 +4,7 @@
   "identifier": "com.1panel.hub",
   "build": {
     "beforeDevCommand": "pnpm web:dev",
-    "beforeBuildCommand": "pnpm generate",
+    "beforeBuildCommand": "pnpm web:build",
     "devUrl": "http://localhost:3000",
     "frontendDist": "../dist"
   },
