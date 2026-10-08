@@ -8,10 +8,17 @@ import Nav from '@douyinfe/semi-ui/lib/es/navigation'
 import Select from '@douyinfe/semi-ui/lib/es/select'
 import SideSheet from '@douyinfe/semi-ui/lib/es/sideSheet'
 import Toast from '@douyinfe/semi-ui/lib/es/toast'
-import { IconArrowLeft, IconClose, IconGithubLogo, IconHome, IconMenu, IconMoon, IconSun } from '@douyinfe/semi-icons'
+import {
+  IconClose,
+  IconGithubLogo,
+  IconHome,
+  IconMenu,
+  IconMoon,
+  IconSun,
+} from '@douyinfe/semi-icons'
 import zhCN from '@douyinfe/semi-ui/lib/es/locale/source/zh_CN'
 import { Logo } from './components/Logo'
-import { NodeHome, NodeOverview } from './components/NodeTable'
+import { NodeHome } from './components/NodeTable'
 import { useNodes } from './hooks/useNodes'
 import { useNodeStatus } from './hooks/useNodeStatus'
 import { useTheme } from './hooks/useTheme'
@@ -47,11 +54,10 @@ function readPanelNode(): string | null {
 }
 
 interface PanelLayoutProps {
-  onBack: () => void
-  children: ReactNode
+  children?: ReactNode
 }
 
-function PanelLayout({ onBack, children }: PanelLayoutProps) {
+function PanelLayout({ children }: PanelLayoutProps) {
   const [collapsed, setCollapsed] = useState(false)
 
   return (
@@ -71,7 +77,6 @@ function PanelLayout({ onBack, children }: PanelLayoutProps) {
           footer={{ collapseButton: true }}
         >
           <Nav.Item itemKey="overview" text="概览" icon={<IconHome />} />
-          <Nav.Item itemKey="nodes" text="返回节点列表" icon={<IconArrowLeft />} onClick={onBack} />
         </Nav>
       </Layout.Sider>
       <Layout.Content
@@ -145,72 +150,80 @@ export function App() {
             header={{
               logo: (
                 <HeaderBrand
-                  control={selectedNode && (
-                    <div className="md:hidden">
-                      <Button
-                        theme="borderless"
-                        type="tertiary"
-                        icon={<IconMenu />}
-                        style={mobileMenuButtonStyle}
-                        aria-label="打开面板导航"
-                        aria-expanded={mobileMenuOpen}
-                        onClick={() => setMobileMenuOpen(true)}
-                      />
-                    </div>
-                  )}
+                  control={
+                    selectedNode && (
+                      <div className="md:hidden">
+                        <Button
+                          theme="borderless"
+                          type="tertiary"
+                          icon={<IconMenu />}
+                          style={mobileMenuButtonStyle}
+                          aria-label="打开面板导航"
+                          aria-expanded={mobileMenuOpen}
+                          onClick={() => setMobileMenuOpen(true)}
+                        />
+                      </div>
+                    )
+                  }
                 />
               ),
             }}
             footer={
-              <div className="flex items-center gap-1 sm:gap-2">
-                <Button
-                  theme="borderless"
-                  type="tertiary"
-                  icon={dark ? <IconSun /> : <IconMoon />}
-                  aria-label={dark ? '切换浅色模式' : '切换深色模式'}
-                  onClick={toggleTheme}
-                />
-                <Button
-                  theme="borderless"
-                  type="tertiary"
-                  icon={<IconGithubLogo />}
-                  aria-label="GitHub 项目"
-                  onClick={() => open('https://github.com/ikxin/1panel-hub')}
-                />
-              </div>
-            }
-          />
-        </Layout.Header>
-        {selectedNode ? (
-          <PanelLayout onBack={() => navigate(null)}>
-            <NodeOverview
-              node={selectedNode}
-              status={statuses[selectedNode.name]}
-              now={now}
-              actions={
-                <>
-                  <div className="min-w-0 flex-1 md:w-48 md:flex-none">
+              <div className="flex min-w-0 items-center gap-1 sm:gap-2">
+                {selectedNode && (
+                  <div className="flex min-w-0 items-center gap-1 sm:gap-2">
                     <Select<string>
                       insetLabel="节点"
                       value={selectedNode.name}
-                      style={{ width: '100%' }}
+                      className="w-28 min-w-0 sm:w-40 md:w-48"
                       optionList={nodes.map((node) => ({ label: node.name, value: node.name }))}
                       onChange={(name) => {
                         if (typeof name === 'string') navigate(name)
                       }}
                     />
                   </div>
-                  <Button className="shrink-0" onClick={() => setEditor({ node: selectedNode })}>
-                    编辑节点
-                  </Button>
-                </>
-              }
-            />
-          </PanelLayout>
+                )}
+                <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+                  {selectedNode && (
+                    <Button
+                      theme="borderless"
+                      type="tertiary"
+                      icon={<IconHome />}
+                      aria-label="返回节点列表"
+                      title="返回节点列表"
+                      onClick={() => navigate(null)}
+                    />
+                  )}
+                  <Button
+                    theme="borderless"
+                    type="tertiary"
+                    icon={dark ? <IconSun /> : <IconMoon />}
+                    aria-label={dark ? '切换浅色模式' : '切换深色模式'}
+                    onClick={toggleTheme}
+                  />
+                  <Button
+                    theme="borderless"
+                    type="tertiary"
+                    icon={<IconGithubLogo />}
+                    aria-label="GitHub 项目"
+                    onClick={() => open('https://github.com/ikxin/1panel-hub')}
+                  />
+                </div>
+              </div>
+            }
+          />
+        </Layout.Header>
+        {selectedNode ? (
+          <PanelLayout />
         ) : (
           <Layout.Content
             className="p-4 sm:p-8"
-            style={{ minHeight: 0, minWidth: 0, overflow: 'auto', backgroundColor: 'var(--semi-color-fill-0)' }}
+            style={{
+              minHeight: 0,
+              minWidth: 0,
+              overflow: 'auto',
+              backgroundColor: 'var(--semi-color-fill-0)',
+            }}
           >
             {storageError && <Banner type="danger" description={storageError} className="mb-4" />}
             {panelName !== null && (
@@ -294,27 +307,6 @@ export function App() {
               onClick={() => setMobileMenuOpen(false)}
             />
           </Nav>
-          <div
-            style={{
-              paddingTop: 12,
-              paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-              borderTop: '1px solid var(--semi-color-border)',
-            }}
-          >
-            <Nav
-              style={{ width: '100%', padding: 0, borderRight: 0, backgroundColor: 'transparent' }}
-              bodyStyle={{ padding: 0 }}
-              selectedKeys={[]}
-            >
-              <Nav.Item
-                itemKey="nodes"
-                text="返回节点列表"
-                icon={<IconArrowLeft />}
-                style={{ height: 32, padding: '6px 12px', alignItems: 'center' }}
-                onClick={() => navigate(null)}
-              />
-            </Nav>
-          </div>
         </SideSheet>
       )}
       {editor && (

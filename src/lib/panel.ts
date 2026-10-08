@@ -91,7 +91,10 @@ export async function fetchDashboard(node: NodeConfig, signal: AbortSignal): Pro
   return data
 }
 
-export async function fetchCurrentInfo(node: NodeConfig, signal: AbortSignal): Promise<CurrentInfo> {
+export async function fetchCurrentInfo(
+  node: NodeConfig,
+  signal: AbortSignal,
+): Promise<CurrentInfo> {
   const data = await panelRequest<CurrentInfo>(node, '/dashboard/current/all/all', signal)
   if (!data || !Number.isFinite(data.uptime)) throw new Error('监控数据无效')
   return data

@@ -4,17 +4,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "app:build": "tauri build --debug",
-    "app:dev": "tauri dev",
+    "dev": "tauri dev",
+    "build": "tauri build --debug",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "web:build": "pnpm typecheck && vite build",
-    "web:dev": "vite",
-    "generate": "pnpm web:build",
     "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "lint:fix": "oxlint --fix"
   },
   "dependencies": {
     "@douyinfe/semi-icons": "^2.103.0",

@@ -19,7 +19,10 @@ export function NodeConfigModal({ node, onClose, onSave }: Props) {
   const request = useRef<AbortController | null>(null)
   const [error, setError] = useState('')
   const [testing, setTesting] = useState(false)
-  const [connection, setConnection] = useState<{ type: 'success' | 'danger'; message: string } | null>(null)
+  const [connection, setConnection] = useState<{
+    type: 'success' | 'danger'
+    message: string
+  } | null>(null)
 
   useEffect(() => () => request.current?.abort(), [])
 
@@ -85,11 +88,7 @@ export function NodeConfigModal({ node, onClose, onSave }: Props) {
       bodyStyle={{ maxHeight: 'calc(100dvh - 220px)', overflowY: 'auto' }}
       footer={
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <Button
-            style={{ marginLeft: 0 }}
-            loading={testing}
-            onClick={() => void testConnection()}
-          >
+          <Button style={{ marginLeft: 0 }} loading={testing} onClick={() => void testConnection()}>
             测试连接
           </Button>
           <div className="ml-auto flex items-center gap-3">

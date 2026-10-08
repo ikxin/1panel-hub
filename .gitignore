@@ -1,7 +1,6 @@
 # Build outputs
 .cache
 dist
-tmp/
 *.tsbuildinfo
 
 # Node dependencies

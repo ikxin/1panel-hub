@@ -29,7 +29,8 @@ export function computeSize(size: number): string {
 
 export function computeSizePair(used?: number, total?: number): string {
   const usedParts = used !== undefined && Number.isFinite(used) ? computeSizeParts(used) : undefined
-  const totalParts = total !== undefined && Number.isFinite(total) ? computeSizeParts(total) : undefined
+  const totalParts =
+    total !== undefined && Number.isFinite(total) ? computeSizeParts(total) : undefined
   if (usedParts && totalParts && usedParts.unit === totalParts.unit) {
     return `${usedParts.value} / ${totalParts.value} ${totalParts.unit}`
   }
@@ -52,5 +53,7 @@ export function formatUptime(seconds: number): string {
   const days = Math.floor(seconds / 86400)
   const hours = Math.floor((seconds % 86400) / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
-  return [days && `${days} 天`, hours && `${hours} 小时`, `${minutes} 分钟`].filter(Boolean).join(' ')
+  return [days && `${days} 天`, hours && `${hours} 小时`, `${minutes} 分钟`]
+    .filter(Boolean)
+    .join(' ')
 }

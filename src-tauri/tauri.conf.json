@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "identifier": "com.1panel.hub",
   "build": {
-    "beforeDevCommand": "pnpm web:dev",
-    "beforeBuildCommand": "pnpm web:build",
+    "beforeDevCommand": "pnpm exec vite",
+    "beforeBuildCommand": "pnpm exec vite build",
     "devUrl": "http://localhost:3000",
     "frontendDist": "../dist"
   },
