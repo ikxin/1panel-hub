@@ -2,10 +2,10 @@ import { lazy, Suspense, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import Banner from '@douyinfe/semi-ui/lib/es/banner'
 import Button from '@douyinfe/semi-ui/lib/es/button'
+import Dropdown from '@douyinfe/semi-ui/lib/es/dropdown'
 import { Layout } from '@douyinfe/semi-ui/lib/es/layout'
 import LocaleProvider from '@douyinfe/semi-ui/lib/es/locale/localeProvider'
 import Nav from '@douyinfe/semi-ui/lib/es/navigation'
-import Select from '@douyinfe/semi-ui/lib/es/select'
 import SideSheet from '@douyinfe/semi-ui/lib/es/sideSheet'
 import Toast from '@douyinfe/semi-ui/lib/es/toast'
 import {
@@ -13,7 +13,9 @@ import {
   IconGithubLogo,
   IconHome,
   IconMenu,
+  IconMore,
   IconMoon,
+  IconServer,
   IconSun,
 } from '@douyinfe/semi-icons'
 import zhCN from '@douyinfe/semi-ui/lib/es/locale/source/zh_CN'
@@ -29,17 +31,13 @@ const NodeConfigModal = lazy(() =>
   import('./components/NodeConfigModal').then((module) => ({ default: module.NodeConfigModal })),
 )
 
-const hubHeaderStyle = {
-  height: 'var(--hub-header-height, 60px)',
-  padding: '0 var(--hub-header-padding, 24px)',
-}
 const mobileMenuButtonStyle = { width: 32, height: 32 }
 
 function HeaderBrand({ control }: { control?: ReactNode }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex shrink-0 items-center gap-2">
       {control}
-      <Logo className="h-8 w-24 md:h-10 md:w-30" />
+      <Logo className="h-8 w-24 shrink-0" />
     </div>
   )
 }
@@ -118,7 +116,7 @@ export function App() {
   const navigate = (name: string | null, replace = false) => {
     const hash = name === null ? '#/' : `#/nodes/${encodeURIComponent(name)}/overview`
     if (replace) window.history.replaceState(null, '', hash)
-    else window.location.hash = hash
+    else window.location.assign(hash)
     setPanelName(name)
     setMobileMenuOpen(false)
   }
@@ -145,9 +143,9 @@ export function App() {
         <Layout.Header>
           <Nav
             mode="horizontal"
-            className="hub-header"
-            style={hubHeaderStyle}
+            style={{ height: 56, padding: '0 12px' }}
             header={{
+              style: { marginRight: 0 },
               logo: (
                 <HeaderBrand
                   control={
@@ -168,49 +166,111 @@ export function App() {
                 />
               ),
             }}
-            footer={
-              <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-                {selectedNode && (
-                  <div className="flex min-w-0 items-center gap-1 sm:gap-2">
-                    <Select<string>
-                      insetLabel="节点"
-                      value={selectedNode.name}
-                      className="w-28 min-w-0 sm:w-40 md:w-48"
-                      optionList={nodes.map((node) => ({ label: node.name, value: node.name }))}
-                      onChange={(name) => {
-                        if (typeof name === 'string') navigate(name)
-                      }}
-                    />
-                  </div>
-                )}
-                <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            footer={{
+              style: { padding: 0, minWidth: 0 },
+              children: (
+                <div className="flex min-w-0 items-center gap-1 sm:gap-2">
                   {selectedNode && (
+                    <div className="hidden min-w-0 md:block">
+                      <Dropdown
+                        trigger="click"
+                        position="bottomRight"
+                        showTick
+                        render={
+                          <Dropdown.Menu className="max-h-80 min-w-40 max-w-[calc(100vw-24px)] overflow-y-auto">
+                            {nodes.map((node) => (
+                              <Dropdown.Item
+                                key={node.name}
+                                active={node.name === selectedNode.name}
+                                onClick={() => navigate(node.name)}
+                              >
+                                <span className="truncate" title={node.name}>
+                                  {node.name}
+                                </span>
+                              </Dropdown.Item>
+                            ))}
+                          </Dropdown.Menu>
+                        }
+                      >
+                        <Button
+                          theme="borderless"
+                          type="tertiary"
+                          icon={<IconServer />}
+                          style={{ padding: '0 8px' }}
+                          aria-label="切换节点"
+                          aria-haspopup="menu"
+                          title={selectedNode.name}
+                        >
+                          <span className="max-w-36 truncate">{selectedNode.name}</span>
+                        </Button>
+                      </Dropdown>
+                    </div>
+                  )}
+                  <div className="hidden shrink-0 items-center gap-2 md:flex">
+                    {selectedNode && (
+                      <Button
+                        theme="borderless"
+                        type="tertiary"
+                        icon={<IconHome />}
+                        aria-label="首页"
+                        title="首页"
+                        onClick={() => navigate(null)}
+                      />
+                    )}
                     <Button
                       theme="borderless"
                       type="tertiary"
-                      icon={<IconHome />}
-                      aria-label="返回节点列表"
-                      title="返回节点列表"
-                      onClick={() => navigate(null)}
+                      icon={dark ? <IconSun /> : <IconMoon />}
+                      aria-label={dark ? '浅色' : '深色'}
+                      onClick={toggleTheme}
                     />
-                  )}
-                  <Button
-                    theme="borderless"
-                    type="tertiary"
-                    icon={dark ? <IconSun /> : <IconMoon />}
-                    aria-label={dark ? '切换浅色模式' : '切换深色模式'}
-                    onClick={toggleTheme}
-                  />
-                  <Button
-                    theme="borderless"
-                    type="tertiary"
-                    icon={<IconGithubLogo />}
-                    aria-label="GitHub 项目"
-                    onClick={() => open('https://github.com/ikxin/1panel-hub')}
-                  />
+                    <Button
+                      theme="borderless"
+                      type="tertiary"
+                      icon={<IconGithubLogo />}
+                      aria-label="GitHub"
+                      onClick={() => open('https://github.com/ikxin/1panel-hub')}
+                    />
+                  </div>
+                  <div className="shrink-0 md:hidden">
+                    <Dropdown
+                      trigger="click"
+                      position="bottomRight"
+                      render={
+                        <Dropdown.Menu>
+                          {selectedNode && (
+                            <Dropdown.Item icon={<IconHome />} onClick={() => navigate(null)}>
+                              首页
+                            </Dropdown.Item>
+                          )}
+                          <Dropdown.Item
+                            icon={dark ? <IconSun /> : <IconMoon />}
+                            onClick={toggleTheme}
+                          >
+                            {dark ? '浅色' : '深色'}
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            icon={<IconGithubLogo />}
+                            onClick={() => open('https://github.com/ikxin/1panel-hub')}
+                          >
+                            GitHub
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      }
+                    >
+                      <Button
+                        theme="borderless"
+                        type="tertiary"
+                        icon={<IconMore />}
+                        style={mobileMenuButtonStyle}
+                        aria-label="更多操作"
+                        aria-haspopup="menu"
+                      />
+                    </Dropdown>
+                  </div>
                 </div>
-              </div>
-            }
+              ),
+            }}
           />
         </Layout.Header>
         {selectedNode ? (
@@ -262,16 +322,16 @@ export function App() {
               }
             />
           }
-          className="hub-header"
           aria-label="面板导航"
           placement="left"
-          width="min(260px, 82vw)"
+          width="min(240px, 82vw)"
           closable={false}
           visible={mobileMenuOpen}
           onCancel={() => setMobileMenuOpen(false)}
           style={{ backgroundColor: 'var(--semi-color-nav-bg)', overflow: 'hidden' }}
           headerStyle={{
-            ...hubHeaderStyle,
+            height: 56,
+            padding: '0 12px',
             display: 'flex',
             alignItems: 'center',
             boxSizing: 'border-box',
@@ -282,7 +342,7 @@ export function App() {
             display: 'flex',
             flexDirection: 'column',
             minHeight: 0,
-            padding: 12,
+            padding: 0,
             overflow: 'hidden',
           }}
         >
@@ -291,19 +351,15 @@ export function App() {
               width: '100%',
               flex: '1 1 0',
               minHeight: 0,
-              padding: 0,
-              borderRight: 0,
               backgroundColor: 'transparent',
               overflowY: 'auto',
             }}
-            bodyStyle={{ padding: 0 }}
             selectedKeys={['overview']}
           >
             <Nav.Item
               itemKey="overview"
               text="概览"
               icon={<IconHome />}
-              style={{ height: 44, alignItems: 'center' }}
               onClick={() => setMobileMenuOpen(false)}
             />
           </Nav>
