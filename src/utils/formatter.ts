@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export function formattedNumber(num: string): number {
   return num.endsWith('.00') ? Number(num.slice(0, -3)) : Number(num)
 }
@@ -56,4 +58,30 @@ export function formatUptime(seconds: number): string {
   return [days && `${days} 天`, hours && `${hours} 小时`, `${minutes} 分钟`]
     .filter(Boolean)
     .join(' ')
+}
+
+export function formatMetric(value: number | undefined, digits = 1): string {
+  return value !== undefined && Number.isFinite(value) && value >= 0
+    ? value.toLocaleString('zh-CN', { maximumFractionDigits: digits })
+    : '—'
+}
+
+export function formatPercent(value: number | undefined): string {
+  const formatted = formatMetric(value)
+  return formatted === '—' ? formatted : `${formatted}%`
+}
+
+export function formatBytes(value: number | undefined): string {
+  return value !== undefined && Number.isFinite(value) && value >= 0 ? computeSize(value) : '—'
+}
+
+export function formatByteRate(value: number | undefined): string {
+  const formatted = formatBytes(value === undefined ? undefined : Number(value.toFixed(2)))
+  return formatted === '—' ? formatted : `${formatted}/s`
+}
+
+export function formatTimestamp(value: number | string | undefined, includeDate = false): string {
+  if (value === undefined) return '—'
+  const date = dayjs(value)
+  return date.isValid() ? date.format(includeDate ? 'YYYY-MM-DD HH:mm:ss' : 'HH:mm:ss') : '—'
 }

@@ -23,7 +23,6 @@ export interface BaseInfo {
   kernelArch: string
   kernelVersion: string
   virtualizationSystem: string
-  ipV4Addr: string
   systemProxy: string
   cpuCores: number
   cpuLogicalCores: number

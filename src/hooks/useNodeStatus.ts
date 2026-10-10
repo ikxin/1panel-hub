@@ -4,6 +4,7 @@ import type { BaseInfo } from '../types/dashboard'
 import { errorMessage, fetchCurrentInfo, fetchDashboard } from '../lib/panel'
 import { updateStatus } from '../lib/status'
 import type { NodeStatus } from '../lib/status'
+import { MONITOR_POLL_MS } from '../lib/monitor'
 
 export function useNodeStatus(nodes: NodeConfig[]) {
   const [snapshot, setSnapshot] = useState<{
@@ -61,7 +62,7 @@ export function useNodeStatus(nodes: NodeConfig[]) {
           const timer = window.setTimeout(() => {
             timers.delete(timer)
             void poll(node, base, baseReceivedAt)
-          }, 3000)
+          }, MONITOR_POLL_MS)
           timers.add(timer)
         }
       }

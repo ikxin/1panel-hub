@@ -30,6 +30,9 @@ import { errorMessage, openExternal } from './lib/panel'
 const NodeConfigModal = lazy(() =>
   import('./components/NodeConfigModal').then((module) => ({ default: module.NodeConfigModal })),
 )
+const NodeOverview = lazy(() =>
+  import('./components/overview/NodeOverview').then((module) => ({ default: module.NodeOverview })),
+)
 
 const mobileMenuButtonStyle = { width: 32, height: 32 }
 
@@ -79,7 +82,12 @@ function PanelLayout({ children }: PanelLayoutProps) {
       </Layout.Sider>
       <Layout.Content
         className="p-3 sm:p-6"
-        style={{ minHeight: 0, minWidth: 0, overflowY: 'auto' }}
+        style={{
+          minHeight: 0,
+          minWidth: 0,
+          overflowY: 'auto',
+          backgroundColor: 'var(--semi-color-fill-0)',
+        }}
       >
         {children}
       </Layout.Content>
@@ -274,7 +282,24 @@ export function App() {
           />
         </Layout.Header>
         {selectedNode ? (
-          <PanelLayout />
+          <PanelLayout>
+            <Suspense
+              fallback={
+                <div role="status" className="py-12 text-center text-(--semi-color-text-2)">
+                  正在加载概览…
+                </div>
+              }
+            >
+              <NodeOverview
+                key={selectedNode.name}
+                node={selectedNode}
+                status={statuses[selectedNode.name]}
+                now={now}
+                onEdit={() => setEditor({ node: selectedNode })}
+                editDisabled={Boolean(storageError)}
+              />
+            </Suspense>
+          </PanelLayout>
         ) : (
           <Layout.Content
             className="p-4 sm:p-8"

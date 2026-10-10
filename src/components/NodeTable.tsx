@@ -14,7 +14,7 @@ import {
   IconServer,
 } from '@douyinfe/semi-icons'
 import type { NodeConfig } from '../lib/nodes'
-import { isOnline } from '../lib/status'
+import { connectionState } from '../lib/status'
 import type { NodeStatus } from '../lib/status'
 import { computeSize, computeSizeFromByte, computeSizePair, formatUptime } from '../utils/formatter'
 
@@ -27,24 +27,6 @@ interface Props {
   onEdit: (node: NodeConfig) => void
   onDelete: (node: NodeConfig) => void
   onOpen: (node: NodeConfig) => void
-}
-
-interface ConnectionState {
-  label: string
-  kind: 'online' | 'offline' | 'attention' | 'pending'
-  tone: string
-}
-
-function connectionState(
-  node: NodeConfig,
-  status: NodeStatus | undefined,
-  now: number,
-): ConnectionState {
-  if (!node.apiKey) return { label: '待配置', kind: 'attention', tone: 'warning' }
-  if (isOnline(status, now)) return { label: '在线', kind: 'online', tone: 'success' }
-  if (status?.error) return { label: '离线', kind: 'offline', tone: 'danger' }
-  if (status?.data) return { label: '等待更新', kind: 'attention', tone: 'warning' }
-  return { label: '连接中', kind: 'pending', tone: 'text-2' }
 }
 
 function ResourceMeter({
