@@ -13,7 +13,19 @@ export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : '操作失败'
 }
 
-async function request<T>(url: string, options: RequestInit): Promise<T> {
+interface PanelRequestOptions {
+  method?: 'GET' | 'POST'
+  body?: unknown
+  timeoutMs?: number
+  responseType?: 'json' | 'blob'
+}
+
+async function request<T>(
+  url: string,
+  options: RequestInit,
+  timeoutMs = 10000,
+  responseType: 'json' | 'blob' = 'json',
+): Promise<T> {
   const controller = new AbortController()
   const abort = () => controller.abort()
   options.signal?.addEventListener('abort', abort, { once: true })
@@ -22,12 +34,23 @@ async function request<T>(url: string, options: RequestInit): Promise<T> {
   const timeout = window.setTimeout(() => {
     timedOut = true
     controller.abort()
-  }, 10000)
+  }, timeoutMs)
 
   try {
     const fetch = isTauri() ? (await import('@tauri-apps/plugin-http')).fetch : globalThis.fetch
     const response = await fetch(url, { ...options, signal: controller.signal })
     const httpError = `请求失败（HTTP ${response.status}）`
+    if (responseType === 'blob') {
+      if (!response.ok) throw new Error(httpError)
+      const blob = await response.blob()
+      const contentType = response.headers.get('Content-Type')?.split(';')[0].trim() || blob.type
+      if (contentType === 'application/json') {
+        const result = JSON.parse(await blob.text()) as PanelResponse<unknown>
+        throw new Error(result?.message || '面板返回的文件数据格式错误')
+      }
+      // Tauri HTTP 插件返回的 Blob 可能丢失响应头中的 MIME 类型。
+      return (blob.type === contentType ? blob : new Blob([blob], { type: contentType })) as T
+    }
     const result = (await response.json().catch(() => {
       throw new Error(response.ok ? '面板返回的数据格式错误' : httpError)
     })) as PanelResponse<T>
@@ -46,7 +69,12 @@ async function request<T>(url: string, options: RequestInit): Promise<T> {
   }
 }
 
-async function panelRequest<T>(node: NodeConfig, path: string, signal: AbortSignal): Promise<T> {
+export async function panelRequest<T>(
+  node: NodeConfig,
+  path: string,
+  signal: AbortSignal,
+  options: PanelRequestOptions = {},
+): Promise<T> {
   signal.throwIfAborted()
   if (!node.apiKey) throw new Error('请编辑节点并配置 1Panel v2 API Key')
   if (!globalThis.crypto?.subtle) {
@@ -68,19 +96,26 @@ async function panelRequest<T>(node: NodeConfig, path: string, signal: AbortSign
     byte.toString(16).padStart(2, '0'),
   ).join('')
   signal.throwIfAborted()
-  return request<T>(`${getNodeOrigin(node)}/api/v2${path}`, {
-    method: 'GET',
-    signal,
-    credentials: 'omit',
-    headers: {
-      'Accept-Language': 'zh',
-      '1Panel-Token': token,
-      '1Panel-Timestamp': timestamp,
-      '1Panel-Signature-Version': 'hmac-sha256',
-      ...(node.apiKeyId ? { '1Panel-Key-ID': node.apiKeyId } : {}),
-      CurrentNode: 'local',
+  return request<T>(
+    `${getNodeOrigin(node)}/api/v2${path}`,
+    {
+      method: options.method ?? 'GET',
+      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      signal,
+      credentials: 'omit',
+      headers: {
+        'Accept-Language': 'zh',
+        '1Panel-Token': token,
+        '1Panel-Timestamp': timestamp,
+        '1Panel-Signature-Version': 'hmac-sha256',
+        ...(node.apiKeyId ? { '1Panel-Key-ID': node.apiKeyId } : {}),
+        CurrentNode: 'local',
+        ...(options.body === undefined ? {} : { 'Content-Type': 'application/json' }),
+      },
     },
-  })
+    options.timeoutMs,
+    options.responseType,
+  )
 }
 
 export async function fetchDashboard(node: NodeConfig, signal: AbortSignal): Promise<BaseInfo> {

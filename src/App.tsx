@@ -23,6 +23,9 @@ const NodeConfigModal = lazy(() =>
 const NodeOverview = lazy(() =>
   import('./components/overview/NodeOverview').then((module) => ({ default: module.NodeOverview })),
 )
+const AppStorePage = lazy(() =>
+  import('./pages/AppStorePage').then((module) => ({ default: module.AppStorePage })),
+)
 
 export function App() {
   const { nodes, storageError, save, remove } = useNodes()
@@ -158,8 +161,29 @@ export function App() {
                 )
               }
             />
+            <Route
+              path="appstore"
+              element={
+                selectedNode && (
+                  <Suspense
+                    fallback={
+                      <div role="status" className="py-12 text-center text-(--semi-color-text-2)">
+                        正在加载应用商店…
+                      </div>
+                    }
+                  >
+                    <AppStorePage
+                      key={`${selectedNode.name}:${selectedNode.host}:${selectedNode.port}:${selectedNode.https}`}
+                      node={selectedNode}
+                      onEdit={() => setEditor({ node: selectedNode })}
+                      editDisabled={Boolean(storageError)}
+                    />
+                  </Suspense>
+                )
+              }
+            />
             {panelSections
-              .filter((item) => item.key !== 'dashboard')
+              .filter((item) => item.key !== 'dashboard' && item.key !== 'appstore')
               .map((item) => (
                 <Route
                   key={item.key}
