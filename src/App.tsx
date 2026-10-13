@@ -26,6 +26,20 @@ const NodeOverview = lazy(() =>
 const AppStorePage = lazy(() =>
   import('./pages/AppStorePage').then((module) => ({ default: module.AppStorePage })),
 )
+const WebsitePage = lazy(() =>
+  import('./pages/WebsitePage').then((module) => ({ default: module.WebsitePage })),
+)
+const DatabasePage = lazy(() =>
+  import('./pages/DatabasePage').then((module) => ({ default: module.DatabasePage })),
+)
+const ContainerPage = lazy(() =>
+  import('./pages/ContainerPage').then((module) => ({ default: module.ContainerPage })),
+)
+const managementPages = [
+  { path: 'website', title: '网站', component: WebsitePage },
+  { path: 'database', title: '数据库', component: DatabasePage },
+  { path: 'docker', title: '容器', component: ContainerPage },
+] as const
 
 export function App() {
   const { nodes, storageError, save, remove } = useNodes()
@@ -182,8 +196,35 @@ export function App() {
                 )
               }
             />
+            {managementPages.map(({ path, title, component: Page }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  selectedNode && (
+                    <Suspense
+                      fallback={
+                        <div role="status" className="py-12 text-center text-(--semi-color-text-2)">
+                          正在加载{title}…
+                        </div>
+                      }
+                    >
+                      <Page
+                        key={JSON.stringify(selectedNode)}
+                        node={selectedNode}
+                        onEdit={() => setEditor({ node: selectedNode })}
+                        editDisabled={Boolean(storageError)}
+                      />
+                    </Suspense>
+                  )
+                }
+              />
+            ))}
             {panelSections
-              .filter((item) => item.key !== 'dashboard' && item.key !== 'appstore')
+              .filter(
+                (item) =>
+                  !['dashboard', 'appstore', 'website', 'database', 'docker'].includes(item.key),
+              )
               .map((item) => (
                 <Route
                   key={item.key}
