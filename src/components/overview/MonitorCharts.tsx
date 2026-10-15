@@ -22,16 +22,22 @@ const chartTitles: Record<MonitorKind, string> = {
   io: '磁盘 I/O',
 }
 
-function MonitorChart({
+export function MonitorChart({
   kind,
   history,
   footer,
+  range,
+  rangeLabel = '最近 5 分钟',
+  emptyDescription = '正在采集趋势数据',
 }: {
   kind: MonitorKind
   history: MonitorSample[]
   footer: string
+  range?: { start: number; end: number }
+  rangeLabel?: string
+  emptyDescription?: string
 }) {
-  const spec = useMemo(() => buildMonitorSpec(kind, history), [kind, history])
+  const spec = useMemo(() => buildMonitorSpec(kind, history, range), [kind, history, range])
   const [chartError, setChartError] = useState(false)
   const ready = hasMonitorData(kind, history)
   const latest = history.at(-1)
@@ -40,7 +46,7 @@ function MonitorChart({
     <Card
       title={<h3 className="m-0 text-sm font-semibold">{chartTitles[kind]}</h3>}
       headerExtraContent={
-        <span className="text-[11px] text-(--semi-color-text-2)">最近 5 分钟</span>
+        <span className="text-[11px] text-(--semi-color-text-2)">{rangeLabel}</span>
       }
       bodyStyle={{ padding: '12px 16px 16px' }}
       style={{ minWidth: 0, borderRadius: 'var(--semi-border-radius-medium)' }}
@@ -64,7 +70,7 @@ function MonitorChart({
       <div
         className="mt-2 h-44 min-w-0"
         role="img"
-        aria-label={`${chartTitles[kind]}最近 5 分钟趋势；${MONITOR_SERIES[kind]
+        aria-label={`${chartTitles[kind]}${rangeLabel}趋势；${MONITOR_SERIES[kind]
           .map(({ field, label }) => `${label}当前 ${formatChartValue(kind, latest?.[field])}`)
           .join('，')}`}
       >
@@ -78,7 +84,7 @@ function MonitorChart({
         ) : (
           <Empty
             image={<IconLineChartStroked size="extra-large" />}
-            description={chartError ? '图表暂时不可用，当前数值仍可查看' : '正在采集趋势数据'}
+            description={chartError ? '图表暂时不可用，当前数值仍可查看' : emptyDescription}
             style={{ height: '100%', justifyContent: 'center' }}
           />
         )}

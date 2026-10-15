@@ -35,10 +35,30 @@ const DatabasePage = lazy(() =>
 const ContainerPage = lazy(() =>
   import('./pages/ContainerPage').then((module) => ({ default: module.ContainerPage })),
 )
+const MonitorPage = lazy(() =>
+  import('./pages/MonitorPage').then((module) => ({ default: module.MonitorPage })),
+)
+const FirewallPage = lazy(() =>
+  import('./pages/FirewallPage').then((module) => ({ default: module.FirewallPage })),
+)
+const LogsPage = lazy(() =>
+  import('./pages/LogsPage').then((module) => ({ default: module.LogsPage })),
+)
+const CronjobPage = lazy(() =>
+  import('./pages/CronjobPage').then((module) => ({ default: module.CronjobPage })),
+)
+const SettingsPage = lazy(() =>
+  import('./pages/SettingsPage').then((module) => ({ default: module.SettingsPage })),
+)
 const managementPages = [
   { path: 'website', title: '网站', component: WebsitePage },
   { path: 'database', title: '数据库', component: DatabasePage },
   { path: 'docker', title: '容器', component: ContainerPage },
+  { path: 'monitor', title: '监控', component: MonitorPage },
+  { path: 'firewall', title: '防火墙', component: FirewallPage },
+  { path: 'logs', title: '日志', component: LogsPage },
+  { path: 'cronjob', title: '计划任务', component: CronjobPage },
+  { path: 'settings', title: '设置', component: SettingsPage },
 ] as const
 
 export function App() {
@@ -223,7 +243,9 @@ export function App() {
             {panelSections
               .filter(
                 (item) =>
-                  !['dashboard', 'appstore', 'website', 'database', 'docker'].includes(item.key),
+                  !['dashboard', 'appstore', ...managementPages.map((page) => page.path)].includes(
+                    item.key,
+                  ),
               )
               .map((item) => (
                 <Route

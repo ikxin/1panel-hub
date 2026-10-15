@@ -50,8 +50,12 @@ export function hasMonitorData(kind: MonitorKind, history: MonitorSample[]): boo
   )
 }
 
-export function buildMonitorSpec(kind: MonitorKind, history: MonitorSample[]): ILineChartSpec {
-  const end = history.at(-1)?.timestamp ?? Date.now()
+export function buildMonitorSpec(
+  kind: MonitorKind,
+  history: MonitorSample[],
+  range?: { start: number; end: number },
+): ILineChartSpec {
+  const end = range?.end ?? history.at(-1)?.timestamp ?? Date.now()
   const series = MONITOR_SERIES[kind]
 
   return {
@@ -85,9 +89,15 @@ export function buildMonitorSpec(kind: MonitorKind, history: MonitorSample[]): I
       {
         orient: 'bottom',
         type: 'time',
-        min: Math.max(history[0]?.timestamp ?? end, end - MONITOR_WINDOW_MS),
+        min: range?.start ?? Math.max(history[0]?.timestamp ?? end, end - MONITOR_WINDOW_MS),
         max: end,
-        layers: [{ timeFormat: '%H:%M:%S', timeFormatMode: 'local', tickCount: 3 }],
+        layers: [
+          {
+            timeFormat: range && range.end - range.start >= 86400000 ? '%m/%d %H:%M' : '%H:%M:%S',
+            timeFormatMode: 'local',
+            tickCount: 3,
+          },
+        ],
         label: { style: { fontSize: 10 } },
         tick: { visible: false, tickCount: 3 },
         grid: { visible: false },

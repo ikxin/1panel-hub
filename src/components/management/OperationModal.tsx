@@ -11,6 +11,7 @@ export interface ResourceOperation {
   description: string
   confirmName?: string
   danger?: boolean
+  successMessage?: string
   action: (signal: AbortSignal) => Promise<void>
 }
 
@@ -49,7 +50,7 @@ export function OperationModal({
             onClick={() =>
               void mutation.run(operation.action).then((success) => {
                 if (success) {
-                  Toast.success(`${operation.title}完成`)
+                  Toast.success(operation.successMessage ?? `${operation.title}完成`)
                   onComplete()
                 }
               })

@@ -100,7 +100,12 @@ export async function panelRequest<T>(
     `${getNodeOrigin(node)}/api/v2${path}`,
     {
       method: options.method ?? 'GET',
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      body:
+        options.body instanceof FormData
+          ? options.body
+          : options.body === undefined
+            ? undefined
+            : JSON.stringify(options.body),
       signal,
       credentials: 'omit',
       headers: {
@@ -110,7 +115,9 @@ export async function panelRequest<T>(
         '1Panel-Signature-Version': 'hmac-sha256',
         ...(node.apiKeyId ? { '1Panel-Key-ID': node.apiKeyId } : {}),
         CurrentNode: 'local',
-        ...(options.body === undefined ? {} : { 'Content-Type': 'application/json' }),
+        ...(options.body === undefined || options.body instanceof FormData
+          ? {}
+          : { 'Content-Type': 'application/json' }),
       },
     },
     options.timeoutMs,

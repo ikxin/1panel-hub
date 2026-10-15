@@ -8,6 +8,7 @@ node_modules
 
 # Logs
 logs
+!src/components/logs/
 *.log
 
 # Misc

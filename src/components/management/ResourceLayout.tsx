@@ -20,11 +20,13 @@ export interface ModulePageProps {
 
 export function ResourceToolbar({
   loading,
+  refreshDisabled,
   onRefresh,
   actions,
   children,
 }: {
   loading: boolean
+  refreshDisabled?: boolean
   onRefresh: () => void
   actions?: ReactNode
   children?: ReactNode
@@ -34,7 +36,12 @@ export function ResourceToolbar({
       <div className="flex flex-wrap items-center gap-3 p-4">
         {children}
         <div className="ml-auto flex flex-wrap gap-2">
-          <Button icon={<IconRefresh />} loading={loading} onClick={onRefresh}>
+          <Button
+            icon={<IconRefresh />}
+            loading={loading}
+            disabled={refreshDisabled}
+            onClick={onRefresh}
+          >
             刷新
           </Button>
           {actions}
